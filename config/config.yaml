@@ -1,0 +1,21 @@
+# config/config.yaml
+
+data:
+  raw_data_path: "data/raw/fer2013.csv"
+  processed_data_dir: "data/processed/"
+  image_size: 48
+  num_classes: 7
+
+model:
+  name: "emotion_cnn"
+  input_shape: [48, 48, 1]
+  epochs: 30
+  batch_size: 64
+  learning_rate: 0.001
+  dropout_rate: 0.5
+  validation_split: 0.2
+
+train:
+  random_state: 42
+  early_stopping_patience: 5
+  model_save_path: "models/emotion_cnn.h5"
