@@ -1,0 +1,19 @@
+data:
+  raw_data_path: "data/raw/fer2013.csv"
+  processed_data_dir: "data/processed/"
+  image_size: 48
+  num_classes: 7
+
+model:
+  name: "emotion_cnn_v2"
+  input_shape: [48, 48, 1]
+  epochs: 50                   # Increased for deeper training
+  batch_size: 32               # Smaller for better learning
+  learning_rate: 0.0005        # More stable updates
+  dropout_rate: 0.4            # Slightly less aggressive regularization
+  validation_split: 0.25       # More validation data
+
+train:
+  random_state: 42
+  early_stopping_patience: 7   # Wait a little longer before stopping
+  model_save_path: "models/emotion_cnn_v2.h5"
