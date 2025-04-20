@@ -68,6 +68,13 @@ facial-emotion-recognition/ │ ├── config/ │ └── config.yaml ├�
 
 ## 👨‍💻 Author
 **Corey Leath**  
+## 🧪 Run the Notebook
+
+To explore the data or preview facial samples, open the Jupyter notebook:
+
+```bash
+jupyter notebook notebooks/exploration.ipynb
+
 GitHub: [github.com/Trojan3877](https://github.com/Trojan3877)  
 LinkedIn: [linkedin.com/in/corey-leath](https://www.linkedin.com/in/corey-leath)
 
