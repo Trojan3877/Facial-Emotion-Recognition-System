@@ -1,0 +1,25 @@
+facial-emotion-recognition/
+│
+├── config/
+│   └── config.yaml                  ← Already created
+│
+├── data/
+│   ├── raw/
+│   │   └── fer2013.csv             ← 📥 Drop the CSV file here
+│   └── processed/                  ← (Will be created during preprocessing)
+│
+├── src/
+│   ├── data_loader.py
+│   ├── preprocess.py
+│   ├── train.py
+│   ├── evaluate.py
+│   └── visualize.py
+│
+├── models/
+│   └── (saved model will go here)
+│
+├── notebooks/
+│   └── exploration.ipynb
+│
+├── README.md
+└── requirements.txt
