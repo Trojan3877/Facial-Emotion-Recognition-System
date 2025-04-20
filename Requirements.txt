@@ -12,3 +12,12 @@ TensorFlow/Keras
 Scikit-learn
 
 YAM
+numpy
+pandas
+matplotlib
+seaborn
+tensorflow
+scikit-learn
+pyyaml
+opencv-python
+jupyter
