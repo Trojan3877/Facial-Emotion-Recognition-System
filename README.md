@@ -2,6 +2,9 @@
 Facial Emotion Recognition System Model
 # Facial Emotion Recognition System 🎭
 
+![image](https://github.com/user-attachments/assets/3e376a84-c942-468c-9652-30d1d947ac04)
+
+
 ## 📌 Project Overview
 This project builds a deep learning-based Facial Emotion Recognition System using the FER2013 dataset. It leverages a Convolutional Neural Network (CNN) to classify facial expressions into seven emotion categories: Angry, Disgust, Fear, Happy, Sad, Surprise, and Neutral.
 
