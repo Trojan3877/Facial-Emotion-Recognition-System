@@ -1,3 +1,15 @@
+# Facial Emotion Recognition System
+
+![CI](https://img.shields.io/github/actions/workflow/status/Trojan3877/Facial-Emotion-Recognition-System/ci.yml?branch=main)
+![License](https://img.shields.io/github/license/Trojan3877/Facial-Emotion-Recognition-System)
+![GitHub stars](https://img.shields.io/github/stars/Trojan3877/Facial-Emotion-Recognition-System?style=social)
+![GitHub forks](https://img.shields.io/github/forks/Trojan3877/Facial-Emotion-Recognition-System?style=social)
+![GitHub issues](https://img.shields.io/github/issues/Trojan3877/Facial-Emotion-Recognition-System)
+![GitHub top language](https://img.shields.io/github/languages/top/Trojan3877/Facial-Emotion-Recognition-System)
+
+>Your one-line project description here...
+
+
 # Facial-Emotion-Recognition-System
 Facial Emotion Recognition System Model
 # Facial Emotion Recognition System 🎭
