@@ -1,6 +1,7 @@
 # 😊 Facial Emotion Recognition System
 
 # Facial Emotion Recognition System 🤖🎭
+https://codecov.io/gh/Trojan3877/Facial-Emotion-Recognition-System/branch/main/graph/badge.svg
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)](https://www.tensorflow.org/)
