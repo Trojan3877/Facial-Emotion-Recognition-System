@@ -1,0 +1,20 @@
+Facial-Emotion-Recognition-System/
+│
+├── model/
+│   └── emotion_model.h5
+├── images/
+│   └── sample_faces.png
+├── notebooks/
+│   └── fer_demo.ipynb
+├── examples/
+│   ├── fer_request.json
+│   └── fer_response.json
+├── docs/
+│   └── performance_metrics.md
+├── tests/
+│   └── test_model.py
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── flowchart.png
+└── README.md
