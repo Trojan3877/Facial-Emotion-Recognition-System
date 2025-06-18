@@ -1,0 +1,13 @@
+{
+  "image_path": "images/sample_faces.png",
+  "model": "emotion_model.h5",
+  "format": "grayscale",
+  "size": [48, 48]
+}
+
+{
+  "predicted_emotion": "Happy",
+  "confidence": 0.94,
+  "model_version": "v1.0.0",
+  "inference_time": "0.032s"
+}
