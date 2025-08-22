@@ -13,38 +13,26 @@ https://codecov.io/gh/Trojan3877/Facial-Emotion-Recognition-System/branch/main/g
 
 # Facial Emotion Recognition System (FER)
 
-> Real-time facial expression classification (7 classes) with a simple FastAPI endpoint, reproducible evaluation, and deployment-ready scaffolding.
-
-## Results (at a glance)
-| Metric       | Value | Notes                          |
-|-------------:|------:|--------------------------------|
-| Accuracy     | 0.00  | FER2013 test split (7 classes) |
-| F1 (macro)   | 0.00  | class-balanced                  |
-| Latency p50  | 0 ms  | CPU, 224×224 RGB, batch=1      |
-
-> Run `python scripts/eval.py --data data/fer2013 --weights model/emotion_model.h5 --img-size 224` and update the table with your real numbers.  
-> Add a confusion matrix screenshot after eval: `assets/confusion_matrix.png`.
-
----
-
 ## Quickstart
 
 ```bash
-# 1) Setup (Python 3.10+ recommended)
-python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+python -m venv .venv && source .venv/bin/activate    # Win: .venv\Scripts\activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
-pip install -r requirements-dev.txt  # optional (linting/testing)
+pip install -r requirements-dev.txt
 
-# 2) Evaluate (prints Accuracy/F1 and saves confusion matrix)
+# If starting from fer2013.csv:
+python scripts/prepare_fer2013.py
+
+# Evaluate (prints Accuracy/F1 + saves confusion matrix to assets/confusion_matrix.png)
 python scripts/eval.py --data data/fer2013 --weights model/emotion_model.h5 --img-size 224
 
-# 3) (Optional) Start API (FastAPI)
+# API
 uvicorn app.main:app --host 0.0.0.0 --port 8080
 # Health:   http://localhost:8080/health
-# Metrics:  http://localhost:8080/metrics   (Prometheus format)
-# Predict:  POST http://localhost:8080/predict  (multipart/form-data: file=@examples/happy.jpg)
-
+# Metrics:  http://localhost:8080/metrics
+# Predict:
+curl -X POST "http://localhost:8080/predict" -F "file=@examples/happy.jpg"
 
 ---
 ![image](https://github.com/user-attachments/assets/9b5f0737-062f-4d93-ad5c-825efe956a49)
