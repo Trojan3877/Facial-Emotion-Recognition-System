@@ -1,0 +1,11 @@
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.flake8]
+max-line-length = 100
+extend-ignore = ["E203","W503"]
+exclude = [".git","__pycache__","build","dist",".venv","venv",".ipynb_checkpoints"]
+
+[tool.isort]
+profile = "black"
