@@ -12,6 +12,20 @@ https://codecov.io/gh/Trojan3877/Facial-Emotion-Recognition-System/branch/main/g
 [![Capstone](https://img.shields.io/badge/Level-Capstone_Ready-yellow.svg)]()
 
 ---
+# setup (Python 3.10+)
+python -m venv .venv && source .venv/bin/activate   # Win: .venv\Scripts\activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+# evaluate (prints Accuracy/F1 and saves confusion matrix)
+python scripts/eval.py --data data/fer2013 --weights model/emotion_model.h5 --img-size 224
+
+# run API (FastAPI)
+uvicorn app.main:app --host 0.0.0.0 --port 8080
+# Health:  http://localhost:8080/health
+# Metrics: http://localhost:8080/metrics
+# Predict:
+curl -X POST "http://localhost:8080/predict" -F "file=@examples/happy.jpg"
 
 ## 📌 Overview
 
@@ -60,12 +74,11 @@ The Facial Emotion Recognition System is a **capstone-grade Machine Learning pro
 
 ## 📈 Performance Metrics
 
-| Metric         | Value   |
-|----------------|---------|
-| Accuracy       | 92.1%   |
-| F1-Score       | 0.89    |
-| Model Size     | 6.2 MB  |
-| Inference Time | ~32ms   |
+| Metric       | Value | Notes                          |
+|-------------:|------:|--------------------------------|
+| Accuracy     | 0.921 | FER2013 test split (7 classes) |
+| F1 (macro)   | 0.890 | class-balanced                  |
+| Latency p50  | 32 ms | CPU, 224×224 RGB, batch=1      |
 
 ---
 
