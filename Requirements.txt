@@ -1,23 +1,15 @@
-🧰 Tech Stack
-Python
-
-NumPy, Pandas
-
-Matplotlib, Seaborn
-
-OpenCV
-
-TensorFlow/Keras
-
-Scikit-learn
-
-YAM
+tensorflow>=2.13
 numpy
-pandas
+pillow
 matplotlib
-seaborn
-tensorflow
 scikit-learn
-pyyaml
-opencv-python
-jupyter
+fastapi
+uvicorn
+prometheus-client
+python-multipart
+
+
+pytest
+black
+flake8
+isort
