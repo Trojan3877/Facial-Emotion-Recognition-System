@@ -3,13 +3,22 @@
 # Facial Emotion Recognition System 🤖🎭
 https://codecov.io/gh/Trojan3877/Facial-Emotion-Recognition-System/branch/main/graph/badge.svg
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)](https://www.tensorflow.org/)
-[![OpenCV](https://img.shields.io/badge/OpenCV-enabled-lightgrey.svg)](https://opencv.org/)
-[![FastAPI](https://img.shields.io/badge/API-FastAPI-green.svg)](https://fastapi.tiangolo.com/)
-[![Streamlit](https://img.shields.io/badge/UI-Streamlit-red.svg)](https://streamlit.io/)
-[![Docker](https://img.shields.io/badge/Containerized-Docker-blue.svg)](https://www.docker.com/)
-[![Capstone](https://img.shields.io/badge/Level-Capstone_Ready-yellow.svg)]()
+<p align="center">
+  <!-- Language and Frameworks -->
+  ![Python](https://img.shields.io/badge/Python-3.10+-blue.svg?style=for-the-badge&logo=python)
+  ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg?style=for-the-badge&logo=tensorflow)
+  ![Streamlit](https://img.shields.io/badge/Streamlit-ui-red.svg?style=for-the-badge&logo=streamlit)
+
+  <!-- Build Status / CI -->
+  ![Build Status](https://img.shields.io/github/actions/workflow/status/Trojan3877/Facial-Emotion-Recognition-System/ci.yml?branch=main&style=for-the-badge)
+
+  <!-- Repo Activity -->
+  ![Last Commit](https://img.shields.io/github/last-commit/Trojan3877/Facial-Emotion-Recognition-System?style=for-the-badge)
+  ![Open Issues](https://img.shields.io/github/issues-raw/Trojan3877/Facial-Emotion-Recognition-System?style=for-the-badge)
+
+  <!-- License -->
+  ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge&logo=opensourceinitiative)
+</p>
 
 # Facial Emotion Recognition System (FER)
 
