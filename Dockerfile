@@ -1,19 +1,11 @@
-# Base image
-FROM python:3.8-slim
+FROM python:3.12
 
-# Set working directory
 WORKDIR /app
+COPY . .
 
-# Copy files
-COPY . /app
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
-# Install dependencies
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    pip install tensorflow keras opencv-python fastapi uvicorn streamlit
+EXPOSE 8080 5000 8081
 
-# Expose port for FastAPI
-EXPOSE 8000
-
-# Default command to run FastAPI app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["bash", "run_pipeline.sh"]
