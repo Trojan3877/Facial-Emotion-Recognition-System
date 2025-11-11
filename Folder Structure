@@ -1,20 +1,21 @@
-Facial-Emotion-Recognition-System/
+Facial_Emotion_Recognition_System/
 │
-├── model/
-│   └── emotion_model.h5
-├── images/
-│   └── sample_faces.png
-├── notebooks/
-│   └── fer_demo.ipynb
-├── examples/
-│   ├── fer_request.json
-│   └── fer_response.json
-├── docs/
-│   └── performance_metrics.md
-├── tests/
-│   └── test_model.py
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-├── flowchart.png
-└── README.md
+├── src/
+│   ├── __init__.py
+│   ├── train.py
+│   ├── evaluate.py
+│   ├── infer.py
+│   └── utils.py
+│
+├── airflow/
+│   └── dags/
+│       └── facial_emotion_dag.py
+│
+├── mlflow_tracking.py
+├── metrix_tracking.py
+├── requirements.txt
+├── .env
+├── Dockerfile
+├── README.md
+└── run_pipeline.sh
+
