@@ -1,113 +1,74 @@
-# 😊 Facial Emotion Recognition System
+# 🎭 Facial Emotion Recognition System  
+> Production-Ready AI/ML Pipeline with Apache Airflow, MLflow, and MetrixFlow
 
-# Facial Emotion Recognition System 🤖🎭
-https://codecov.io/gh/Trojan3877/Facial-Emotion-Recognition-System/branch/main/graph/badge.svg
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.3-orange)
+![MLflow](https://img.shields.io/badge/Tracking-MLflow-green)
+![Apache Airflow](https://img.shields.io/badge/Orchestration-Apache%20Airflow-blue)
+![MetrixFlow](https://img.shields.io/badge/Monitoring-MetrixFlow-purple)
+![Docker](https://img.shields.io/badge/Containerized-Yes-blue)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-<p align="center">
-  <!-- Language and Frameworks -->
-  ![Python](https://img.shields.io/badge/Python-3.10+-blue.svg?style=for-the-badge&logo=python)
-  ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg?style=for-the-badge&logo=tensorflow)
-  ![Streamlit](https://img.shields.io/badge/Streamlit-ui-red.svg?style=for-the-badge&logo=streamlit)
+---
 
-  <!-- Build Status / CI -->
-  ![Build Status](https://img.shields.io/github/actions/workflow/status/Trojan3877/Facial-Emotion-Recognition-System/ci.yml?branch=main&style=for-the-badge)
+## 🧠 Overview
+The **Facial Emotion Recognition System** uses deep learning to classify human emotions from images.  
+This version is integrated with full **MLOps tracking** using:
+- **Apache Airflow** for orchestration  
+- **MLflow** for experiment tracking  
+- **MetrixFlow** for real-time performance visualization  
 
-  <!-- Repo Activity -->
-  ![Last Commit](https://img.shields.io/github/last-commit/Trojan3877/Facial-Emotion-Recognition-System?style=for-the-badge)
-  ![Open Issues](https://img.shields.io/github/issues-raw/Trojan3877/Facial-Emotion-Recognition-System?style=for-the-badge)
+The system demonstrates an end-to-end AI pipeline suitable for **AI Research Engineers** and **ML Researchers** — with metrics reproducibility, containerized environments, and model lineage.
 
-  <!-- License -->
-  ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge&logo=opensourceinitiative)
-</p>
+---
 
-# Facial Emotion Recognition System (FER)
+## 🧰 Tech Stack
+| Category | Tools |
+|-----------|-------|
+| Frameworks | PyTorch, FastAPI, Streamlit |
+| Orchestration | Apache Airflow |
+| Experiment Tracking | MLflow |
+| Monitoring | MetrixFlow |
+| Containerization | Docker |
+| Hardware | NVIDIA RTX GPU (CUDA 12.1) |
 
-## Quickstart
+---
 
+## 🧱 Architecture
+                ┌──────────────────────────────┐
+                │         Apache Airflow        │
+                │    (Schedules + DAGs)         │
+                └──────────────┬────────────────┘
+                               │
+                               ▼
+                ┌──────────────────────────────┐
+                │           MLflow             │
+                │ Logs params, metrics, models │
+                └──────────────┬────────────────┘
+                               │
+                               ▼
+                ┌──────────────────────────────┐
+                │         MetrixFlow           │
+                │ Real-time dashboard tracking │
+                └──────────────────────────────┘
+
+---
+
+## 🧪 Pipeline Stages
+| Stage | Description |
+|--------|--------------|
+| **1. Data Preprocessing** | Cleans and augments facial image datasets |
+| **2. Model Training** | Uses CNN for emotion classification (Happy, Sad, Angry, etc.) |
+| **3. Evaluation** | Calculates metrics (Accuracy, Precision, F1, Recall) |
+| **4. Logging** | Sends results to MLflow + MetrixFlow |
+| **5. Orchestration** | Scheduled daily via Apache Airflow |
+
+---
+
+## ⚙️ How to Run (Locally)
+
+### 1️⃣ Clone the repo
 ```bash
-python -m venv .venv && source .venv/bin/activate    # Win: .venv\Scripts\activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-pip install -r requirements-dev.txt
-
-# If starting from fer2013.csv:
-python scripts/prepare_fer2013.py
-
-# Evaluate (prints Accuracy/F1 + saves confusion matrix to assets/confusion_matrix.png)
-python scripts/eval.py --data data/fer2013 --weights model/emotion_model.h5 --img-size 224
-
-# API
-uvicorn app.main:app --host 0.0.0.0 --port 8080
-# Health:   http://localhost:8080/health
-# Metrics:  http://localhost:8080/metrics
-# Predict:
-curl -X POST "http://localhost:8080/predict" -F "file=@examples/happy.jpg"
-
----
-![image](https://github.com/user-attachments/assets/9b5f0737-062f-4d93-ad5c-825efe956a49)
-
-
-
-
-
-
-
-
-
-## 🔍 Features
-
-| Component       | Description                                       |
-|----------------|---------------------------------------------------|
-| 🧠 Model        | CNN-based classifier trained on FER-2013 dataset |
-| ⚙️ API          | FastAPI with `/predict` endpoint for inference   |
-| 🎨 UI           | Streamlit upload + visualization interface       |
-| 📦 Container    | Dockerfile for isolated deployment                |
-| 📊 Metrics      | Accuracy, loss curves, F1-score, and test results |
-| 📁 Examples     | Sample request/response JSON files                |
-
----
-
-## 🧠 Tech Stack & Tools
-
-- **Python 3.8+**
-- **TensorFlow / Keras**
-- **OpenCV / NumPy / PIL**
-- **FastAPI** – API backend
-- **Streamlit** – Web UI frontend
-- **Docker** – Containerized deployment
-- **FER-2013 Dataset**
-
----
-
-## 📈 Performance Metrics
-
-| Metric       | Value | Notes                          |
-|-------------:|------:|--------------------------------|
-| Accuracy     | 0.921 | FER2013 test split (7 classes) |
-| F1 (macro)   | 0.890 | class-balanced                  |
-| Latency p50  | 32 ms | CPU, 224×224 RGB, batch=1      |
-
----
-
-## 🗂 Project Structure
-
-```bash
-Facial-Emotion-Recognition-System/
-├── app/
-│   └── main.py                 # FastAPI endpoint
-├── examples/
-│   ├── fer_request.json
-│   └── fer_response.json
-├── model/
-│   └── emotion_model.h5        # Trained CNN model
-├── streamlit_app.py            # Streamlit demo interface
-├── Dockerfile
-├── requirements.txt
-├── docs/
-│   ├── performance_metrics.md
-│   └── flowchart.png
-└── README.md
-
-#MachineLearning #ComputerVision #EmotionRecognition #TensorFlow
-#Python #FastAPI #Streamlit #Docker #CapstoneProject #AIEngineering
+git clone https://github.com/Trojan3877/Facial_Emotion_Recognition_System.git
+cd Facial_Emotion_Recognition_System
 
