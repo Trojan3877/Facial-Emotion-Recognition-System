@@ -1,23 +1,42 @@
-import torch
-import torch.nn as nn
-from mlflow_tracking import log_experiment
-from metrix_tracking import log_metric
+import cv2
+import numpy as np
+import joblib
+from sklearn.svm import SVC
+from skimage.feature import hog
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+import os
 
-def train_model():
-    model_name = "FacialEmotionRecognition"
-    params = {"epochs": 10, "lr": 0.001}
+def extract_features(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    features = hog(gray, pixels_per_cell=(8, 8), cells_per_block=(2, 2))
+    return features
 
-    # Dummy training loop example
-    acc, loss = 0.92, 0.08
-    model = nn.Linear(10, 2)  # replace with your actual model
+def load_dataset(path="data"):
+    X, y = [], []
+    for emotion in os.listdir(path):
+        folder = os.path.join(path, emotion)
+        for file in os.listdir(folder):
+            img_path = os.path.join(folder, file)
+            img = cv2.imread(img_path)
+            if img is None:
+                continue
+            X.append(extract_features(img))
+            y.append(emotion)
+    return np.array(X), np.array(y)
 
-    # Log to MLflow
-    metrics = {"accuracy": acc, "loss": loss}
-    log_experiment(model_name, model, params, metrics)
+def train():
+    X, y = load_dataset()
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # Log to MetrixFlow
-    log_metric("accuracy", acc)
-    log_metric("loss", loss)
+    model = SVC(kernel="linear", probability=True)
+    model.fit(X_train, y_train)
 
-    print(f"🏁 Training complete with acc={acc} loss={loss}")
-    return acc
+    preds = model.predict(X_test)
+    print(classification_report(y_test, preds))
+
+    joblib.dump(model, "models/model.pkl")
+    print("Model saved to models/model.pkl")
+
+if __name__ == "__main__":
+    train()
