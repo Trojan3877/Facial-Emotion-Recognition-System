@@ -1,0 +1,20 @@
+Facial_Emotion_Recognition_System/
+ ├── README.md
+ ├── Metrics.md
+ ├── requirements.txt
+ ├── Dockerfile
+ ├── .gitignore
+ ├── src/
+ │   ├── main.py
+ │   ├── train.py
+ │   └── predict.py
+ ├── api/
+ │   └── main.py
+ ├── app/
+ │   └── streamlit_app.py
+ ├── models/
+ │   └── model.pkl
+ ├── data/
+ │   └── sample_input.jpg
+ └── notebooks/
+     └── demo.ipynb
