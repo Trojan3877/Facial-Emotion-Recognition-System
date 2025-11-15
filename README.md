@@ -1,74 +1,51 @@
 # 🎭 Facial Emotion Recognition System  
-> Production-Ready AI/ML Pipeline with Apache Airflow, MLflow, and MetrixFlow
+# 🎭 Facial Emotion Recognition System (Scikit-Learn Edition)
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
-![PyTorch](https://img.shields.io/badge/PyTorch-2.3-orange)
-![MLflow](https://img.shields.io/badge/Tracking-MLflow-green)
-![Apache Airflow](https://img.shields.io/badge/Orchestration-Apache%20Airflow-blue)
-![MetrixFlow](https://img.shields.io/badge/Monitoring-MetrixFlow-purple)
-![Docker](https://img.shields.io/badge/Containerized-Yes-blue)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Scikit-Learn](https://img.shields.io/badge/ScikitLearn-1.4-orange)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-green)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow)
+
+## 📌 Overview
+This project performs **Facial Emotion Recognition** using a lightweight **Scikit-Learn model**, enabling fast inference, small model files, and easy deployment.
+
+The system extracts facial features using classical CV pipelines, builds a compact ML classifier, and exposes both a **FastAPI inference server** and a **Streamlit UI demo**.
+
+Perfect for:
+- Recruiter demos  
+- Portfolio projects  
+- Lightweight deployments  
+- Education & prototyping  
 
 ---
 
-## 🧠 Overview
-The **Facial Emotion Recognition System** uses deep learning to classify human emotions from images.  
-This version is integrated with full **MLOps tracking** using:
-- **Apache Airflow** for orchestration  
-- **MLflow** for experiment tracking  
-- **MetrixFlow** for real-time performance visualization  
-
-The system demonstrates an end-to-end AI pipeline suitable for **AI Research Engineers** and **ML Researchers** — with metrics reproducibility, containerized environments, and model lineage.
-
----
-
-## 🧰 Tech Stack
-| Category | Tools |
-|-----------|-------|
-| Frameworks | PyTorch, FastAPI, Streamlit |
-| Orchestration | Apache Airflow |
-| Experiment Tracking | MLflow |
-| Monitoring | MetrixFlow |
-| Containerization | Docker |
-| Hardware | NVIDIA RTX GPU (CUDA 12.1) |
+## 🧠 Features
+- 🎯 Fast Scikit-Learn emotion classifier  
+- 📸 Classical feature extraction (HOG)  
+- ⚙️ FastAPI inference endpoint (`/predict`)  
+- 🚀 Streamlit interactive UI  
+- 🐳 Docker-ready  
+- 🧪 L6-Quality Metrics (Precision, Recall, F1, Confusion Matrix)  
 
 ---
 
-## 🧱 Architecture
-                ┌──────────────────────────────┐
-                │         Apache Airflow        │
-                │    (Schedules + DAGs)         │
-                └──────────────┬────────────────┘
-                               │
-                               ▼
-                ┌──────────────────────────────┐
-                │           MLflow             │
-                │ Logs params, metrics, models │
-                └──────────────┬────────────────┘
-                               │
-                               ▼
-                ┌──────────────────────────────┐
-                │         MetrixFlow           │
-                │ Real-time dashboard tracking │
-                └──────────────────────────────┘
+## 📊 Key Results (from Metrics.md)
+
+| Metric | Score |
+|--------|--------|
+| Accuracy | **92.5%** |
+| Precision | **0.91** |
+| Recall | **0.90** |
+| F1-Score | **0.90** |
+
+👉 Full evaluation results are in **Metrics.md**
 
 ---
 
-## 🧪 Pipeline Stages
-| Stage | Description |
-|--------|--------------|
-| **1. Data Preprocessing** | Cleans and augments facial image datasets |
-| **2. Model Training** | Uses CNN for emotion classification (Happy, Sad, Angry, etc.) |
-| **3. Evaluation** | Calculates metrics (Accuracy, Precision, F1, Recall) |
-| **4. Logging** | Sends results to MLflow + MetrixFlow |
-| **5. Orchestration** | Scheduled daily via Apache Airflow |
+## 🚀 Run Locally
 
----
-
-## ⚙️ How to Run (Locally)
-
-### 1️⃣ Clone the repo
+### 1. Install dependencies
 ```bash
-git clone https://github.com/Trojan3877/Facial_Emotion_Recognition_System.git
-cd Facial_Emotion_Recognition_System
-
+pip install -r requirements.txt
