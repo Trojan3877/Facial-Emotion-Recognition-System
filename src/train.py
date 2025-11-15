@@ -1,42 +1,57 @@
+import os
 import cv2
 import numpy as np
 import joblib
 from sklearn.svm import SVC
-from skimage.feature import hog
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
-import os
+from sklearn.metrics import classification_report, accuracy_score
 
-def extract_features(image):
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    features = hog(gray, pixels_per_cell=(8, 8), cells_per_block=(2, 2))
-    return features
+DATASET_PATH = "fer2013.csv"
 
-def load_dataset(path="data"):
-    X, y = [], []
-    for emotion in os.listdir(path):
-        folder = os.path.join(path, emotion)
-        for file in os.listdir(folder):
-            img_path = os.path.join(folder, file)
-            img = cv2.imread(img_path)
-            if img is None:
-                continue
-            X.append(extract_features(img))
-            y.append(emotion)
-    return np.array(X), np.array(y)
+def preprocess_image(image_array):
+    """
+    Accepts a flattened 48x48 grayscale array and reshapes, normalizes it.
+    """
+    image = np.reshape(image_array, (48, 48)).astype("uint8")
+    image = cv2.resize(image, (48, 48))
+    image = image / 255.0
+    return image.flatten()
+
+def load_dataset():
+    import pandas as pd
+    df = pd.read_csv(DATASET_PATH)
+    
+    pixels = df["pixels"].tolist()
+    emotions = df["emotion"].tolist()
+
+    X = []
+    for p in pixels:
+        vals = np.array(p.split(), dtype="float32")
+        X.append(preprocess_image(vals))
+
+    X = np.array(X)
+    y = np.array(emotions)
+
+    return train_test_split(X, y, test_size=0.2, random_state=42)
 
 def train():
-    X, y = load_dataset()
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    print("📥 Loading dataset...")
+    X_train, X_test, y_train, y_test = load_dataset()
 
+    print("🤖 Training SVM model...")
     model = SVC(kernel="linear", probability=True)
     model.fit(X_train, y_train)
 
-    preds = model.predict(X_test)
-    print(classification_report(y_test, preds))
+    print("📊 Evaluating model...")
+    predictions = model.predict(X_test)
+    acc = accuracy_score(y_test, predictions)
 
-    joblib.dump(model, "models/model.pkl")
-    print("Model saved to models/model.pkl")
+    print("✔️ Accuracy:", acc)
+    print(classification_report(y_test, predictions))
+
+    print("💾 Saving model to model.joblib...")
+    joblib.dump(model, "model.joblib")
+    print("🎉 Training complete!")
 
 if __name__ == "__main__":
     train()
