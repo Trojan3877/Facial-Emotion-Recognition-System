@@ -1,0 +1,5 @@
+src/main.py         # CLI runner
+src/train.py        # Trains model + exports model.pkl
+src/predict.py      # Loads model + predict()
+api/main.py         # FastAPI endpoint
+app/streamlit_app.py# UI demo
