@@ -3,6 +3,16 @@
 # Author: Corey Leath (Trojan3877)
 # =====================================================
 
+import tensorflow as tf
+
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    print("🚀 GPU DETECTED — Using GPU for inference.")
+    tf.config.experimental.set_memory_growth(gpus[0], True)
+else:
+    print("⚠ No GPU detected — defaulting to CPU.")
+
+
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
 import numpy as np
