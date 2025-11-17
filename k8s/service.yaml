@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fer-service
+  labels:
+    app: fer-app
+
+spec:
+  type: LoadBalancer  # exposes your app externally (AWS/GCP/Azure)
+  selector:
+    app: fer-app
+
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP
+      name: fastapi
+
+    - port: 8501
+      targetPort: 8501
+      protocol: TCP
+      name: streamlit
