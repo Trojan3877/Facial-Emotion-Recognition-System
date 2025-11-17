@@ -1,51 +1,106 @@
 # 🎭 Facial Emotion Recognition System  
 # 🎭 Facial Emotion Recognition System (Scikit-Learn Edition)
+# 🎭 Facial Emotion Recognition System (FER-2013)
+### **Author:** Corey Leath (GitHub: [Trojan3877](https://github.com/Trojan3877))  
+**Status:** Production-Ready | L5/L6 Quality | Deployable | GPU-Accelerated  
+<p align="center">
 
-![Python](https://img.shields.io/badge/Python-3.12-blue)
-![Scikit-Learn](https://img.shields.io/badge/ScikitLearn-1.4-orange)
-![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
-![FastAPI](https://img.shields.io/badge/FastAPI-API-green)
-![Docker](https://img.shields.io/badge/Docker-Ready-blue)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow)
+  <!-- Python -->
+  <img src="https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white" alt="Python">
 
-## 📌 Overview
-This project performs **Facial Emotion Recognition** using a lightweight **Scikit-Learn model**, enabling fast inference, small model files, and easy deployment.
+  <!-- TensorFlow -->
+  <img src="https://img.shields.io/badge/TensorFlow-2.15-FF6F00?logo=tensorflow&logoColor=white" alt="TensorFlow">
 
-The system extracts facial features using classical CV pipelines, builds a compact ML classifier, and exposes both a **FastAPI inference server** and a **Streamlit UI demo**.
+  <!-- Streamlit -->
+  <img src="https://img.shields.io/badge/Streamlit-1.33-FF4B4B?logo=streamlit&logoColor=white" alt="Streamlit">
 
-Perfect for:
-- Recruiter demos  
-- Portfolio projects  
-- Lightweight deployments  
-- Education & prototyping  
+  <!-- OpenCV -->
+  <img src="https://img.shields.io/badge/OpenCV-4.9.0-5C3EE8?logo=opencv&logoColor=white" alt="OpenCV">
 
----
+  <!-- NumPy -->
+  <img src="https://img.shields.io/badge/NumPy-1.26.4-4D77CF?logo=numpy&logoColor=white" alt="NumPy">
 
-## 🧠 Features
-- 🎯 Fast Scikit-Learn emotion classifier  
-- 📸 Classical feature extraction (HOG)  
-- ⚙️ FastAPI inference endpoint (`/predict`)  
-- 🚀 Streamlit interactive UI  
-- 🐳 Docker-ready  
-- 🧪 L6-Quality Metrics (Precision, Recall, F1, Confusion Matrix)  
+  <!-- Pandas -->
+  <img src="https://img.shields.io/badge/Pandas-2.2.1-150458?logo=pandas&logoColor=white" alt="Pandas">
 
----
+  <!-- License -->
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License">
 
-## 📊 Key Results (from Metrics.md)
+  <!-- Status -->
+  <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen" alt="Status">
 
-| Metric | Score |
-|--------|--------|
-| Accuracy | **92.5%** |
-| Precision | **0.91** |
-| Recall | **0.90** |
-| F1-Score | **0.90** |
+  <!-- GitHub Repo Size -->
+  <img src="https://img.shields.io/github/repo-size/Trojan3877/Facial-Emotion-Recognition-System?color=blue" alt="Repo Size">
 
-👉 Full evaluation results are in **Metrics.md**
+</p>
 
 ---
 
-## 🚀 Run Locally
+## 📘 Overview  
+This project is a full **Facial Emotion Recognition (FER)** system built using the **FER-2013 dataset**.  
+It includes:
 
-### 1. Install dependencies
-```bash
-pip install -r requirements.txt
+- A complete **training pipeline** (preprocessing → model → metrics)
+- A production-level **CNN architecture**
+- Inference via **predict.py**
+- A clean UI via **Streamlit** (`streamlit_app.py`)
+- Full visualization (accuracy curves, confusion matrix)
+- A professional ML engineering structure  
+- Deployment-ready components for portfolio use
+
+This project demonstrates **Machine Learning Engineer (L5/L6) capabilities**, including:
+- Model design  
+- Training with callbacks  
+- Data validation  
+- Visualization  
+- Inference API  
+- Deployment readiness  
+- Reproducibility (`requirements.txt`)  
+
+---
+
+# 🧠 Architecture  
+Facial Emotion Recognition System
+│
+├── src/
+│ ├── train.py # Train CNN model (L6 quality)
+│ ├── predict.py # Run inference on images
+│ ├── streamlit_app.py # Web UI for predictions
+│ ├── visualize.py # Plots + confusion matrix
+│
+├── emotion_model_final.h5 # Saved trained model (if included)
+├── fer2013.csv # Training dataset
+├── history.json # Training history
+├── requirements.txt # Reproducible environment
+└── README.md # You are here
+
+
+---
+
+# 🚀 Features  
+### ✔ **7-class emotion detection**
+- Angry  
+- Disgust  
+- Fear  
+- Happy  
+- Sad  
+- Surprise  
+- Neutral  
+
+### ✔ **L6-quality CNN model**
+- 3 convolutional blocks  
+- BatchNorm + Dropout for stability  
+- Final Dense classifier  
+- Adaptive learning rate  
+- EarlyStopping + Checkpointing  
+
+### ✔ **Training visualizations**
+Saved in `/plots/`:
+- accuracy_curve.png  
+- loss_curve.png  
+- confusion_matrix.png  
+- classification_report.txt  
+
+### ✔ **Streamlit Web App**
+Run with:
+
