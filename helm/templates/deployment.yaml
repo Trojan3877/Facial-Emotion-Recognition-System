@@ -13,7 +13,9 @@ spec:
 
   template:
     metadata:
-      labels:
+      labels:nodeSelector:
+  accelerator: nvidia
+
         app: {{ include "facial-emotion-recognition.name" . }}
 
     spec:
