@@ -75,6 +75,66 @@ Facial Emotion Recognition System
 └── README.md # You are here
 
 
+
+flowchart TD
+
+    subgraph UI["User Interfaces"]
+        ST[Streamlit App<br/>:8501]
+        API_DOCS[FastAPI Docs<br/>/docs]
+    end
+
+    subgraph API["Inference & API Layer"]
+        FASTAPI[FastAPI Server<br/>/predict]
+        MODEL[Loaded FER Model<br/>emotion_model_final.h5]
+    end
+
+    subgraph PRE["Preprocessing"]
+        CV2[OpenCV Image Processing<br/>48x48 Grayscale]
+    end
+
+    subgraph LOGS["MLOps & Logging"]
+        MLFLOW[MLflow Tracking<br/>Metrics / Params / Artifacts]
+        SNOWFLAKE[Snowflake Warehouse<br/>Prediction Logs]
+    end
+
+    subgraph STORAGE["Models & Artifacts"]
+        MODEL_FILE[(emotion_model_final.h5)]
+        HISTORY[(history.json)]
+    end
+
+    subgraph K8S["Kubernetes Cluster"]
+        POD1((FER Pod #1))
+        POD2((FER Pod #2))
+        LB[LoadBalancer Service<br/>80 → 8000/8501]
+    end
+
+    subgraph DOCKER["Containerization"]
+        DOCKERFILE[Docker Image<br/>FastAPI + Streamlit]
+    end
+
+    %% FLOW CONNECTIONS
+
+    ST --> FASTAPI
+    API_DOCS --> FASTAPI
+
+    FASTAPI --> PRE
+    PRE --> MODEL
+    MODEL --> FASTAPI
+
+    FASTAPI --> SNOWFLAKE
+    FASTAPI --> MLFLOW
+
+    MLFLOW --> HISTORY
+    MLFLOW --> MODEL_FILE
+
+    DOCKERFILE --> POD1
+    DOCKERFILE --> POD2
+
+    POD1 --> LB
+    POD2 --> LB
+    LB --> ST
+    LB --> FASTAPI
+
 ---
 
 # 🚀 Features  
