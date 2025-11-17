@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "facial-emotion-recognition.fullname" . }}
+
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: {{ include "facial-emotion-recognition.name" . }}
+
+  ports:
+    - name: fastapi
+      port: {{ .Values.service.portFastAPI }}
+      targetPort: 8000
+    - name: streamlit
+      port: {{ .Values.service.portStreamlit }}
+      targetPort: 8501
