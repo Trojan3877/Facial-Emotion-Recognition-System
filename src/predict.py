@@ -1,42 +1,88 @@
+"""
+=========================================================
+FACIAL EMOTION RECOGNITION — INFERENCE SCRIPT (L5/L6 Level)
+Author: Trojan3877 (Corey Leath)
+Description:
+    - Loads trained FER model
+    - Accepts an image path
+    - Preprocesses and predicts the emotion
+    - Returns readable label + confidence
+=========================================================
+"""
+
 import cv2
 import numpy as np
-import joblib
-from sklearn.svm import SVC
-from skimage.feature import hog
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
-import os
+import tensorflow as tf
 
-def extract_features(image):
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    features = hog(gray, pixels_per_cell=(8, 8), cells_per_block=(2, 2))
-    return features
+# Emotion categories for FER-2013 dataset
+EMOTION_LABELS = [
+    "Angry", "Disgust", "Fear",
+    "Happy", "Sad", "Surprise", "Neutral"
+]
 
-def load_dataset(path="data"):
-    X, y = [], []
-    for emotion in os.listdir(path):
-        folder = os.path.join(path, emotion)
-        for file in os.listdir(folder):
-            img_path = os.path.join(folder, file)
-            img = cv2.imread(img_path)
-            if img is None:
-                continue
-            X.append(extract_features(img))
-            y.append(emotion)
-    return np.array(X), np.array(y)
+MODEL_PATH = "emotion_model_final.h5"
 
-def train():
-    X, y = load_dataset()
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# ---------------------------------------------------------
+# Load the trained model
+# ---------------------------------------------------------
+print("📥 Loading model...")
+model = tf.keras.models.load_model(MODEL_PATH)
+print("✅ Model loaded successfully!")
 
-    model = SVC(kernel="linear", probability=True)
-    model.fit(X_train, y_train)
 
-    preds = model.predict(X_test)
-    print(classification_report(y_test, preds))
+# ---------------------------------------------------------
+# Preprocess image (L6 production style)
+# ---------------------------------------------------------
+def preprocess_image(img_path: str):
+    """Loads and preprocesses an image for FER model."""
 
-    joblib.dump(model, "models/model.pkl")
-    print("Model saved to models/model.pkl")
+    # Load image in grayscale
+    img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+    if img is None:
+        raise ValueError(f"❌ Could not read image: {img_path}")
 
+    # Detect face (optional improvement: Haar cascades)
+    # Resize to 48x48 for FER-2013
+    img = cv2.resize(img, (48, 48))
+    img = img.astype("float32") / 255.0
+
+    # Expand dims → (1, 48, 48, 1)
+    img = np.expand_dims(img, axis=-1)
+    img = np.expand_dims(img, axis=0)
+
+    return img
+
+
+# ---------------------------------------------------------
+# Predict emotion from image
+# ---------------------------------------------------------
+def predict_emotion(img_path: str):
+    """Runs prediction and returns label + confidence."""
+    img = preprocess_image(img_path)
+
+    preds = model.predict(img)
+    pred_idx = np.argmax(preds)
+    confidence = float(np.max(preds))
+
+    return EMOTION_LABELS[pred_idx], confidence
+
+
+# ---------------------------------------------------------
+# Main execution (CLI)
+# ---------------------------------------------------------
 if __name__ == "__main__":
-    train()
+    import sys
+
+    if len(sys.argv) < 2:
+        print("⚠️ Usage: python src/predict.py <image_path>")
+        sys.exit(1)
+
+    image_path = sys.argv[1]
+
+    try:
+        label, conf = predict_emotion(image_path)
+        print(f"\n🎯 Predicted Emotion: **{label}**")
+        print(f"📊 Confidence: {conf:.4f}\n")
+
+    except Exception as e:
+        print(f"❌ Error: {e}")
