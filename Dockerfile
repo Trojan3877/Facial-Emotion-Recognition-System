@@ -4,7 +4,7 @@
 # ============================================================
 
 # ----- Base Image (CPU version of TensorFlow) -----
-FROM python:3.10-slim
+ENV NVIDIA_VISIBLE_DEVICES=all
 
 # ----- Set working directory -----
 WORKDIR /app
