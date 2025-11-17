@@ -33,5 +33,10 @@ RUN mkdir -p ~/.streamlit && \
 # ----- Expose Streamlit port -----
 EXPOSE 8501
 
-# ----- Default command: Launch Streamlit UI -----
-CMD ["streamlit", "run", "src/streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Expose ports: FastAPI 8000, Streamlit 8501
+EXPOSE 8000
+EXPOSE 8501
+
+# Run BOTH FastAPI + Streamlit inside one container
+CMD uvicorn src.api:app --host 0.0.0.0 --port 8000 & \
+    streamlit run src/streamlit_app.py --server.port=8501 --server.address=0.0.0.0
