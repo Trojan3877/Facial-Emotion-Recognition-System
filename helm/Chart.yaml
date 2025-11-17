@@ -1,0 +1,6 @@
+apiVersion: v2
+name: facial-emotion-recognition
+description: Helm chart for Facial Emotion Recognition System (FastAPI + Streamlit)
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
