@@ -37,6 +37,13 @@ EXPOSE 8501
 EXPOSE 8000
 EXPOSE 8501
 
+ENV SNOWFLAKE_USER=""
+ENV SNOWFLAKE_PASSWORD=""
+ENV SNOWFLAKE_ACCOUNT=""
+ENV SNOWFLAKE_DATABASE="MLDB"
+ENV SNOWFLAKE_SCHEMA="PUBLIC"
+ENV SNOWFLAKE_WAREHOUSE="ML_WH"
+
 # Run BOTH FastAPI + Streamlit inside one container
 CMD uvicorn src.api:app --host 0.0.0.0 --port 8000 & \
     streamlit run src/streamlit_app.py --server.port=8501 --server.address=0.0.0.0
