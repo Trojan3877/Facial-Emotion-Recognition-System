@@ -1,29 +1,91 @@
-name: CI - Facial Emotion Recognition System
+name: CI/CD Pipeline - Facial Emotion Recognition
 
 on:
   push:
-    branches: [ main ]
+    branches: ["main"]
   pull_request:
-    branches: [ main ]
+    branches: ["main"]
 
 jobs:
-  test:
+
+  ###############################################
+  # 1. Lint + Style Checks
+  ###############################################
+  lint:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install tensorflow keras numpy opencv-python pytest
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 black
 
-    - name: Run Unit Tests
-      run: |
-        pytest tests/test_model.py
+      - name: Run flake8 (Style Lint)
+        run: |
+          flake8 src
+
+      - name: Check formatting with Black
+        run: |
+          black --check src
+
+  ###############################################
+  # 2. Unit Tests
+  ###############################################
+  tests:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Run tests
+        run: |
+          pytest -q
+
+  ###############################################
+  # 3. Docker Build (Optional Deployment)
+  ###############################################
+  build_docker:
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: |
+          docker build -t fer_app .
+
+      # OPTIONAL — push to Docker Hub later
+      # - name: Login to DockerHub
+      #   uses: docker/login-action@v2
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      # - name: Push Image
+      #   run: |
+      #     docker tag fer_app yourname/fer_app:latest
+      #     docker push yourname/fer_app:latest
+
