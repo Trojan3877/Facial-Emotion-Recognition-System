@@ -1,49 +1,32 @@
 # ============================================================
-# Facial Emotion Recognition System — Production Dockerfile
-# Author: Corey Leath (Trojan3877)
+# GPU-ENABLED DOCKERFILE FOR FACIAL EMOTION RECOGNITION SYSTEM
+# Base image includes CUDA 11.8 + cuDNN 8
 # ============================================================
 
-# ----- Base Image (CPU version of TensorFlow) -----
-ENV NVIDIA_VISIBLE_DEVICES=all
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 
-# ----- Set working directory -----
+# Prevent interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Python and system packages
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip python3-dev python3-venv \
+    libglib2.0-0 libsm6 libxext6 libxrender-dev wget git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy project
 WORKDIR /app
+COPY . /app
 
-# ----- Install system dependencies -----
-RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
-    libffi-dev \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# Install Python dependencies
+RUN pip3 install --upgrade pip
+RUN pip3 install tensorflow==2.15.0
+RUN pip3 install -r requirements.txt
 
-# ----- Copy project files -----
-COPY requirements.txt .
-COPY src/ ./src/
-COPY fer2013.csv ./  # Optional if you include dataset locally
-COPY emotion_model_final.h5 ./  # Include trained model
-
-# ----- Install Python dependencies -----
-RUN pip install --no-cache-dir -r requirements.txt
-
-# ----- Streamlit config: prevents network prompts -----
-RUN mkdir -p ~/.streamlit && \
-    echo "[server]\nheadless = true\nenableCORS = false\nenableXsrfProtection = false\n" > ~/.streamlit/config.toml
-
-# ----- Expose Streamlit port -----
-EXPOSE 8501
-
-# Expose ports: FastAPI 8000, Streamlit 8501
+# Expose ports for FastAPI and Streamlit
 EXPOSE 8000
 EXPOSE 8501
 
-ENV SNOWFLAKE_USER=""
-ENV SNOWFLAKE_PASSWORD=""
-ENV SNOWFLAKE_ACCOUNT=""
-ENV SNOWFLAKE_DATABASE="MLDB"
-ENV SNOWFLAKE_SCHEMA="PUBLIC"
-ENV SNOWFLAKE_WAREHOUSE="ML_WH"
-
-# Run BOTH FastAPI + Streamlit inside one container
+# Launch FastAPI + Streamlit
 CMD uvicorn src.api:app --host 0.0.0.0 --port 8000 & \
     streamlit run src/streamlit_app.py --server.port=8501 --server.address=0.0.0.0
