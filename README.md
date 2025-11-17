@@ -48,6 +48,9 @@ It includes:
 - A professional ML engineering structure  
 - Deployment-ready components for portfolio use
 
+GPU Deployment
+This model supports NVIDIA GPUs (CUDA 11.8, cuDNN 8.6) and was tested on [instance type] with latency of ~XX ms per image.
+
 This project demonstrates **Machine Learning Engineer (L5/L6) capabilities**, including:
 - Model design  
 - Training with callbacks  
