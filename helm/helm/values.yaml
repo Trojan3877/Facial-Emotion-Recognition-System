@@ -30,3 +30,9 @@ ingress:
   enabled: false
   className: nginx
   host: fer.yourdomain.com
+
+resources:
+  limits:
+    nvidia.com/gpu: 1
+  requests:
+    nvidia.com/gpu: 1
