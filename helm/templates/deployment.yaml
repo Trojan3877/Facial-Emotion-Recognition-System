@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "facial-emotion-recognition.fullname" . }}
+  labels:
+    app: {{ include "facial-emotion-recognition.name" . }}
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "facial-emotion-recognition.name" . }}
+
+  template:
+    metadata:
+      labels:
+        app: {{ include "facial-emotion-recognition.name" . }}
+
+    spec:
+      containers:
+        - name: fer-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          env:
+            - name: SNOWFLAKE_USER
+              value: "{{ .Values.env.SNOWFLAKE_USER }}"
+            - name: SNOWFLAKE_PASSWORD
+              value: "{{ .Values.env.SNOWFLAKE_PASSWORD }}"
+            - name: SNOWFLAKE_ACCOUNT
+              value: "{{ .Values.env.SNOWFLAKE_ACCOUNT }}"
+            - name: SNOWFLAKE_DATABASE
+              value: "{{ .Values.env.SNOWFLAKE_DATABASE }}"
+            - name: SNOWFLAKE_SCHEMA
+              value: "{{ .Values.env.SNOWFLAKE_SCHEMA }}"
+            - name: SNOWFLAKE_WAREHOUSE
+              value: "{{ .Values.env.SNOWFLAKE_WAREHOUSE }}"
+
+          ports:
+            - containerPort: 8000
+            - containerPort: 8501
+
+          resources:
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
