@@ -6,3 +6,5 @@ tensorflow
 streamlit
 numpy
 pillow
+snowflake-connector-python
+pandas
