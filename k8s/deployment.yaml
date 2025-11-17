@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fer-app
+  labels:
+    app: fer-app
+
+spec:
+  replicas: 2   # L6/L7-level: high availability
+  selector:
+    matchLabels:
+      app: fer-app
+
+  template:
+    metadata:
+      labels:
+        app: fer-app
+
+    spec:
+      containers:
+        - name: fer-container
+          image: fer_app:latest   # change to your DockerHub image when ready
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8000   # FastAPI
+            - containerPort: 8501   # Streamlit
+
+          resources:
+            limits:
+              cpu: "1"
+              memory: "2Gi"
+            requests:
+              cpu: "0.5"
+              memory: "1Gi"
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
