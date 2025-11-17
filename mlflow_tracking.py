@@ -1,15 +1,47 @@
+# ============================================================
+# MLflow Tracking Utility
+# Author: Corey Leath (Trojan3877)
+# ============================================================
+
 import mlflow
-import mlflow.pytorch
-from datetime import datetime
+import mlflow.keras
+import os
 
-def log_experiment(model_name, model, params, metrics):
-    mlflow.set_tracking_uri("file:./mlruns")
-    mlflow.set_experiment(model_name)
+# Create experiment if not exists
+EXPERIMENT_NAME = "Facial_Emotion_Recognition"
 
-    with mlflow.start_run(run_name=f"{model_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"):
-        for k, v in params.items():
-            mlflow.log_param(k, v)
-        for k, v in metrics.items():
-            mlflow.log_metric(k, v)
-        mlflow.pytorch.log_model(model, "model")
-        print(f"✅ Logged {model_name} to MLflow successfully.")
+def start_mlflow_run(params: dict):
+    """
+    Initializes MLflow experiment and logs parameters.
+    """
+    mlflow.set_experiment(EXPERIMENT_NAME)
+    run = mlflow.start_run()
+
+    # Log parameters
+    for key, value in params.items():
+        mlflow.log_param(key, value)
+
+    return run
+
+
+def log_metrics(metrics_dict: dict, step: int = None):
+    """
+    Logs metrics during training or evaluation.
+    """
+    for key, value in metrics_dict.items():
+        mlflow.log_metric(key, value, step=step)
+
+
+def log_model(model, model_name="emotion_model"):
+    """
+    Logs the trained Keras model to MLflow.
+    """
+    mlflow.keras.log_model(model, model_name)
+
+
+def log_artifact(file_path: str):
+    """
+    Logs files (plots, JSON, etc.)
+    """
+    if os.path.exists(file_path):
+        mlflow.log_artifact(file_path)
