@@ -1,0 +1,23 @@
+{{- if .Values.ingress.enabled }}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "facial-emotion-recognition.fullname" . }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.className }}
+
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "facial-emotion-recognition.fullname" . }}
+                port:
+                  number: {{ .Values.service.portFastAPI }}
+
+{{- end }}
