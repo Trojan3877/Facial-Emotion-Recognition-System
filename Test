@@ -1,0 +1,10 @@
+/tests
+│
+├── test_imports.py
+├── test_data_loading.py
+├── test_preprocessing.py
+├── test_model_structure.py
+├── test_training_step.py
+├── test_inference.py
+├── test_api_endpoint.py       # (if you added FastAPI)
+└── test_metrics.py
