@@ -1,33 +1,32 @@
-<h1 align="center">🧠 Emotion Recognition + RAG + LLM Explainer API</h1>
-
 <p align="center">
-  <b>A production-grade AI system that integrates CNN-based emotion detection, psychology-driven RAG retrieval, and LLM interpretability.</b>
-</p>
 
-<p align="center">
-  <!-- Badges -->
-  <img src="https://img.shields.io/badge/Framework-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Model-PyTorch-ee4c2c?style=for-the-badge&logo=pytorch&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Language-Python_3.10-blue?style=for-the-badge&logo=python&logoColor=white"/>
-  <img src="https://img.shields.io/badge/LLM-GPT--4o--mini-412991?style=for-the-badge&logo=openai"/>
-  <img src="https://img.shields.io/badge/RAG-Enabled-7b42f6?style=for-the-badge&logo=googledocs"/>
-  <img src="https://img.shields.io/badge/Container-Docker-0db7ed?style=for-the-badge&logo=docker"/>
-  <img src="https://img.shields.io/badge/CI/CD-GitHub_Actions-black?style=for-the-badge&logo=githubactions"/>
-</p>
-![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
-![Contributions](https://img.shields.io/badge/Contributions-Welcome-orange?style=for-the-badge)
-![CI](https://img.shields.io/github/actions/workflow/status/Trojan3877/Disease_Prediction_Capstone/ci.yml?style=for-the-badge&label=CI%20Pipeline)
-![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen?style=for-the-badge&logo=pytest)
-![Python](https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge&logo=python)
-![API](https://img.shields.io/badge/API-FastAPI-green?style=for-the-badge)
+  <!-- General Repo Badges -->
+  <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Contributions-Welcome-orange?style=for-the-badge" />
 
-Tech Stack 
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![PyTorch](https://img.shields.io/badge/PyTorch-ee4c2c?style=for-the-badge&logo=pytorch&logoColor=white)
-![OpenAI](https://img.shields.io/badge/LLM-GPT--4o--mini-412991?style=for-the-badge&logo=openai)
-![Docker](https://img.shields.io/badge/Docker-0db7ed?style=for-the-badge&logo=docker&logoColor=white)
-![RAG](https://img.shields.io/badge/RAG-Enabled-7b42f6?style=for-the-badge&logo=googlecloud)
+  <br/>
+
+  <!-- Tech Stack Badges -->
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
+  <img src="https://img.shields.io/badge/PyTorch-ee4c2c?style=for-the-badge&logo=pytorch&logoColor=white" />
+  <img src="https://img.shields.io/badge/LLM-GPT--4o--mini-412991?style=for-the-badge&logo=openai" />
+  <img src="https://img.shields.io/badge/RAG-Enabled-7b42f6?style=for-the-badge&logo=googlecloud" />
+  <img src="https://img.shields.io/badge/Docker-0db7ed?style=for-the-badge&logo=docker&logoColor=white" />
+
+  <br/>
+
+  <!-- CI/CD Badges -->
+  <img src="https://img.shields.io/github/actions/workflow/status/Trojan3877/Disease_Prediction_Capstone/ci.yml?style=for-the-badge&label=CI%20Pipeline" />
+  <img src="https://img.shields.io/badge/Tests-Passing-brightgreen?style=for-the-badge&logo=pytest" />
+
+  <br/>
+
+  <!-- Python & API Badges -->
+  <img src="https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/API-FastAPI-green?style=for-the-badge" />
+
+</p>
 
 ## 📌 **Project Overview**
 
