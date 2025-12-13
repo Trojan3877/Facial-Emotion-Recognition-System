@@ -1,94 +1,71 @@
 import json
-import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
-from src.config.settings import settings
-from openai import OpenAI
-
-client = OpenAI(api_key=settings.OPENAI_API_KEY)
+from typing import List
 
 
 class EmotionContextRetriever:
     """
-    A lightweight RAG retriever that provides psychology-backed
-    context for emotions predicted by the model.
-
-    Uses:
-    - Local vector store (in-memory)
-    - OpenAI embeddings API (or MCP-compatible model)
+    Lightweight RAG retriever for psychological explanations tied to emotion classes.
+    This simulates vector retrieval for a GitHub portfolio project but can be upgraded
+    to FAISS/Pinecone later.
     """
 
     def __init__(self):
-        self.model_name = "text-embedding-3-small"
-
-        # Emotion psychology knowledge base (RAG corpus)
-        self.corpus = {
-            "happy": "Happiness is associated with joy, comfort, safety, and positive social connection.",
-            "sad": "Sadness can reflect emotional pain, loss, disappointment, or a request for empathy.",
-            "angry": "Anger may indicate frustration, injustice, boundary violations, or perceived threats.",
-            "surprised": "Surprise often comes from unexpected events—positive or negative—and involves high alertness.",
-            "fearful": "Fear is a protective emotional response tied to perceived danger or uncertainty.",
-            "disgusted": "Disgust is linked to aversion, moral judgment, or sensing something unpleasant.",
-            "neutral": "A neutral expression suggests calmness, baseline emotional state, or reflective thinking."
+        # Psychology-backed context examples
+        # In a real RAG pipeline, these would be chunked embeddings.
+        self.psychology_database = {
+            "happy": (
+                "Happiness is associated with dopamine release, social bonding, "
+                "and increased cognitive flexibility. People experiencing happiness "
+                "tend to display open body language and increased eye contact."
+            ),
+            "sad": (
+                "Sadness often arises from loss, disappointment, or emotional fatigue. "
+                "It may lead to withdrawal, lowered mood, reduced energy, and slower speech."
+            ),
+            "angry": (
+                "Anger is connected to perceived threats or injustice. Physiological signs "
+                include increased heart rate, tense muscles, and direct gaze."
+            ),
+            "fear": (
+                "Fear activates the amygdala, triggering fight-or-flight responses. "
+                "Common behaviors include avoidance, widened eyes, and defensive posture."
+            ),
+            "neutral": (
+                "Neutral expressions indicate a baseline emotional state. The individual may "
+                "be processing information, maintaining composure, or simply at rest."
+            ),
+            "surprise": (
+                "Surprise is linked to sudden unexpected stimuli. Behavioral cues include "
+                "raised eyebrows, wide eyes, and a brief pause in movement."
+            ),
+            "disgust": (
+                "Disgust often emerges as a reaction to unpleasant or morally objectionable stimuli. "
+                "It is associated with nose wrinkling, eye narrowing, and head turning."
+            )
         }
 
-        # Precompute embeddings for RAG corpus
-        self.keys = list(self.corpus.keys())
-        self.embeddings = self._embed_corpus()
-
-    def _embed_corpus(self):
+    def retrieve(self, emotions: List[str]) -> str:
         """
-        Embed the emotion corpus on initialization.
-        """
-        texts = list(self.corpus.values())
+        Retrieve psychology context for a list of predicted emotions.
 
-        embeddings = client.embeddings.create(
-            model=self.model_name,
-            input=texts
-        )
+        Parameters
+        ----------
+        emotions : list of str
+            Example: ['sad', 'fear']
 
-        vectors = [e.embedding for e in embeddings.data]
-        return np.array(vectors)
-
-    def _embed_query(self, emotions):
-        """
-        Converts predicted emotions into a single query embedding.
-        """
-        combined_query = " ".join(emotions)
-
-        result = client.embeddings.create(
-            model=self.model_name,
-            input=combined_query
-        )
-
-        return np.array(result.data[0].embedding)
-
-    def retrieve(self, predicted_emotions):
-        """
-        Retrieves the most relevant psychology context for the given emotions
-        using cosine similarity over embedding vectors.
+        Returns
+        -------
+        str : Combined explanatory context
         """
 
-        if isinstance(predicted_emotions, str):
-            predicted_emotions = [predicted_emotions]
+        context_chunks = []
 
-        # Embed the predicted emotions
-        query_vec = self._embed_query(predicted_emotions)
+        for emotion in emotions:
+            emotion = emotion.lower().strip()
+            if emotion in self.psychology_database:
+                context_chunks.append(self.psychology_database[emotion])
+            else:
+                context_chunks.append(f"No psychology context available for '{emotion}'.")
 
-        # Score each corpus entry
-        scores = cosine_similarity([query_vec], self.embeddings)[0]
-
-        # Rank highest scores
-        ranked_idx = np.argsort(scores)[::-1]
-
-        retrieved_chunks = []
-        for idx in ranked_idx[:3]:
-            emotion = self.keys[idx]
-            text = self.corpus[emotion]
-            retrieved_chunks.append({
-                "emotion": emotion,
-                "score": float(scores[idx]),
-                "text": text
-            })
-
-        # Return combined context for LLM
-        return json.dumps(retrieved_chunks, indent=4)
+        # Merge all context into one unified RAG context block
+        return " ".join(context_chunks)
