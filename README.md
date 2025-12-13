@@ -71,28 +71,8 @@ This repository demonstrates skills in **Machine Learning Engineering, Applied A
 
 ---
 ## 🧩 System Design Diagram
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/97912859-76ce-400d-9318-a208c9984a22" />
 
-```mermaid
-flowchart TD
-    A[User Uploads Image] --> B[FastAPI Backend]
-
-    subgraph CNN Pipeline
-        B --> C[Preprocessing<br>Resize → Normalize → Tensor]
-        C --> D[PyTorch CNN Model<br>emotion_cnn.pth]
-        D --> E[Predicted Emotions]
-    end
-
-    subgraph RAG Layer
-        E --> F[Psychology Context Retriever<br>(RAG)]
-        F --> G[RAG Context Output]
-    end
-
-    subgraph LLM Layer
-        G --> H[LLM Explanation Module<br>GPT-4o-mini or MCP Model]
-        H --> I[Human-Readable Explanation]
-    end
-
-    I --> J[API JSON Response]
 
 ## 🚀 **Key Features**
 
