@@ -43,3 +43,11 @@ Facial_Emotion_Recognition_System/
 ├── ARCHITECTURE.md
 ├── metrics.md
 └── README.md
+
+
+tests/
+    ├── __init__.py
+    ├── test_pipeline.py
+    ├── test_rag.py
+    ├── test_llm.py
+    └── test_api.py
