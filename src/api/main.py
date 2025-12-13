@@ -1,70 +1,108 @@
-# =====================================================
-# FastAPI Inference API for Facial Emotion Recognition
-# Author: Corey Leath (Trojan3877)
-# =====================================================
-
-import tensorflow as tf
-
-gpus = tf.config.list_physical_devices('GPU')
-if gpus:
-    print("🚀 GPU DETECTED — Using GPU for inference.")
-    tf.config.experimental.set_memory_growth(gpus[0], True)
-else:
-    print("⚠ No GPU detected — defaulting to CPU.")
-
-
 from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import JSONResponse
-import numpy as np
-import tensorflow as tf
-import cv2
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import uvicorn
+from src.pipeline.inference import EmotionPipeline
+from src.rag.context_retriever import EmotionContextRetriever
+from src.llm.explainer import EmotionLLMExplainer
 
-# Load the trained model
-model = tf.keras.models.load_model("emotion_model_final.h5")
 
-# Emotion labels (same order used during training)
-emotion_labels = [
-    "Angry", "Disgust", "Fear", "Happy", "Sad", "Surprise", "Neutral"
-]
+# Initialize components
+pipeline = EmotionPipeline()
+rag = EmotionContextRetriever()
+llm = EmotionLLMExplainer()
 
+
+# FastAPI App
 app = FastAPI(
-    title="Facial Emotion Recognition API",
-    description="Upload an image and receive an emotion prediction.",
-    version="1.0",
+    title="Facial Emotion Recognition + LLM + RAG API",
+    description="A production-ready API for emotion classification with LLM explanations.",
+    version="1.0.0",
 )
 
-# --------------- Helper: Preprocess the image ----------------
-def preprocess_image(image_bytes):
-    # Convert to numpy array
-    file_bytes = np.frombuffer(image_bytes, np.uint8)
-    img = cv2.imdecode(file_bytes, cv2.IMREAD_GRAYSCALE)
 
-    # Resize to 48x48 for FER
-    img = cv2.resize(img, (48, 48))
-    img = img.astype("float32") / 255.0
-    img = np.expand_dims(img, axis=(0, -1))  # shape: (1, 48, 48, 1)
-    return img
+# CORS Support
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# ----------------------- API ROUTES --------------------------
+
+# Request Model
+class EmotionRequest(BaseModel):
+    emotions: list
+
 
 @app.get("/")
-def root():
-    return {"message": "Facial Emotion Recognition API is running!"}
+def home():
+    return {"status": "online", "message": "Emotion AI API Running Successfully!"}
+
 
 @app.post("/predict")
-async def predict(file: UploadFile = File(...)):
-    try:
-        image_bytes = await file.read()
-        img = preprocess_image(image_bytes)
+async def predict_emotion(image: UploadFile = File(...)):
+    """
+    Endpoint: Perform CNN-based emotion prediction.
+    """
+    predictions = pipeline.predict(image)
+    return {"predictions": predictions}
 
-        pred = model.predict(img)[0]
-        emotion_idx = int(np.argmax(pred))
-        confidence = float(np.max(pred))
 
-        return JSONResponse({
-            "emotion": emotion_labels[emotion_idx],
-            "confidence": round(confidence, 4)
-        })
+@app.post("/rag")
+async def retrieve_context(request: EmotionRequest):
+    """
+    Endpoint: Retrieve psychology-backed context via RAG.
+    """
+    context = rag.retrieve(request.emotions)
+    return {"context": context}
 
-    except Exception as e:
-        return JSONResponse({"error": str(e)}, status_code=500)
+
+@app.post("/explain")
+async def explain_emotions(request: EmotionRequest):
+    """
+    Endpoint: Generate LLM explanation using predictions + RAG context.
+    """
+    # Step 1: Retrieve psychology context
+    rag_context = rag.retrieve(request.emotions)
+
+    # Step 2: Generate LLM explanation
+    explanation = llm.explain_emotions(
+        emotions=request.emotions,
+        rag_context=rag_context
+    )
+
+    return {
+        "emotions": request.emotions,
+        "context_used": rag_context,
+        "explanation": explanation
+    }
+
+
+@app.post("/full-analysis")
+async def full_analysis(image: UploadFile = File(...)):
+    """
+    Full pipeline:
+    1. Predict emotion(s)
+    2. Retrieve RAG psychology context
+    3. Generate LLM explanation
+    """
+    predictions = pipeline.predict(image)
+    
+    rag_context = rag.retrieve(predictions)
+
+    explanation = llm.explain_emotions(
+        emotions=predictions,
+        rag_context=rag_context
+    )
+
+    return {
+        "predictions": predictions,
+        "context_used": rag_context,
+        "explanation": explanation
+    }
+
+
+# Run the server (local development)
+if __name__ == "__main__":
+    uvicorn.run("src.api.app:app", host="0.0.0.0", port=8000, reload=True)
