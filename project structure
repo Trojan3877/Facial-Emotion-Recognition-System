@@ -1,5 +1,45 @@
-src/main.py         # CLI runner
-src/train.py        # Trains model + exports model.pkl
-src/predict.py      # Loads model + predict()
-api/main.py         # FastAPI endpoint
-app/streamlit_app.py# UI demo
+Facial_Emotion_Recognition_System/
+│
+├── src/
+│   ├── detection/               # Face detection + preprocessing
+│   │   └── detect_faces.py
+│   ├── modeling/                # CNN/ResNet model + training
+│   │   └── model.py
+│   ├── inference/               # Model loading + inference engine
+│   │   └── predictor.py
+│   ├── llm_explainer/           # LLM explanation module
+│   │   └── explain.py
+│   ├── rag/                     # Vector store + embedding RAG
+│   │   ├── build_store.py
+│   │   └── retriever.py
+│   ├── api/                     # FastAPI microservice
+│   │   ├── app.py
+│   │   └── schemas.py
+│   ├── utils/                   # Helper functions
+│   │   ├── logging_utils.py
+│   │   └── image_utils.py
+│   └── config/
+│       └── settings.py
+│
+├── data/
+│   ├── raw/
+│   ├── processed/
+│   └── rag_corpus/              # Text corpus for emotional context
+│
+├── artifacts/
+│   ├── models/
+│   ├── vector_store/
+│   └── logs/
+│
+├── diagrams/
+│
+├── tests/
+│   └── test_api.py
+│
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── .env.example
+├── ARCHITECTURE.md
+├── metrics.md
+└── README.md
