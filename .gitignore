@@ -1,8 +1,56 @@
-venv/
+# ----------------------------------------------------
+# Python Artifacts
+# ----------------------------------------------------
+*.pyc
+*.pyo
+*.pyd
 __pycache__/
+*.DS_Store
+
+# Virtual Environments
+venv/
+env/
+.venv/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# ----------------------------------------------------
+# Environment Variables
+# ----------------------------------------------------
+.env
+.env.*
+
+# Never commit secrets
+OPENAI_API_KEY
+HF_API_KEY
+CUSTOM_LLM_ENDPOINT
+
+# ----------------------------------------------------
+# Build / Cache Files
+# ----------------------------------------------------
+*.log
+*.out
+*.tmp
+.cache/
+logs/
+
+# ----------------------------------------------------
+# PyTorch Model Files
+# ----------------------------------------------------
+*.pth
+*.pt
 models/
-*.pkl
-*.png
-*.jpg
-*.jpeg
-.DS_Store
+
+# ----------------------------------------------------
+# Docker
+# ----------------------------------------------------
+docker-compose.override.yml
+*.pid
+
+# ----------------------------------------------------
+# OS / Editor Artifacts
+# ----------------------------------------------------
+Thumbs.db
+.idea/
+.vscode/
