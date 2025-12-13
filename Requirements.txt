@@ -1,10 +1,37 @@
-fastapi
-uvicorn
-python-multipart
-opencv-python
-tensorflow
-streamlit
-numpy
-pillow
-snowflake-connector-python
-pandas
+# -------------------------
+# Core Python Dependencies
+# -------------------------
+fastapi==0.110.1
+uvicorn==0.29.0
+
+# -------------------------
+# ML / Deep Learning
+# -------------------------
+torch==2.2.1
+torchvision==0.17.1
+
+# Image processing
+Pillow==10.2.0
+
+# -------------------------
+# Data / Utilities
+# -------------------------
+numpy==1.26.4
+python-multipart==0.0.9
+pydantic==2.6.3
+
+# -------------------------
+# LLM / OpenAI Client
+# -------------------------
+openai==1.14.0
+
+# -------------------------
+# RAG / Text Processing
+# -------------------------
+scikit-learn==1.4.1
+sentence-transformers==2.3.1   # optional future upgrade
+
+# -------------------------
+# Development Tools
+# -------------------------
+loguru==0.7.2
