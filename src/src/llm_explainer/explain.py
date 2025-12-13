@@ -1,90 +1,85 @@
-import json
-from src.rag.context_retriever import EmotionContextRetriever
-from src.inference.predictor import EmotionPredictor
-from src.config.settings import settings
+import os
+from typing import List, Optional
+from pydantic import BaseModel
 
-# MCP-compatible OpenAI client
+# If using OpenAI or MCP-compatible models
 from openai import OpenAI
 
-client = OpenAI(api_key=settings.OPENAI_API_KEY)
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
-class LLMEmotionExplainer:
+class LLMResponse(BaseModel):
+    emotions: List[str]
+    rag_context: str
+    explanation: str
+
+
+class EmotionLLMExplainer:
     """
-    Generates psychology-backed explanations of detected emotions.
-    Uses:
-    - Emotion predictions from the CNN/ResNet model
-    - RAG knowledge retrieval
-    - An LLM for final synthesis
+    Generates an interpretable explanation for predicted emotions by
+    merging model predictions with psychology-backed context (RAG).
     """
 
-    def __init__(self, model_name="gpt-4o-mini"):
-        self.predictor = EmotionPredictor(use_resnet=settings.USE_RESNET)
-        self.retriever = EmotionContextRetriever()
+    def __init__(self, model_name: str = "gpt-4o-mini"):
+        """
+        Parameters
+        ----------
+        model_name : str
+            Any MCP/LLM model name (GPT-4o, GPT-4.1, Claude, Llama-3 via API).
+        """
         self.model_name = model_name
 
-    def generate_explanation(self, image_array):
+    def explain_emotions(self, emotions: List[str], rag_context: str) -> str:
         """
-        Full pipeline:
-        1. Run local model inference
-        2. Retrieve psychology-based RAG context
-        3. Ask LLM for a structured emotional analysis
+        Uses an LLM to produce a natural-language explanation of the detected emotions.
+
+        Parameters
+        ----------
+        emotions : list of str
+            CNN model predictions (e.g., ['sad', 'fear'])
+        rag_context : str
+            Text retrieved from psychological studies via RAG
+
+        Returns
+        -------
+        str : Human-readable explanation
         """
 
-        prediction = self.predictor.predict_and_format_for_llm(image_array)
+        system_prompt = """
+        You are an Emotion AI Explainer. Your job is to interpret human
+        emotions in a psychologically accurate and empathetic way.
+        
+        Use:
+        - The predicted emotions (from CNN)
+        - The RAG psychology context (behavioral science)
+        
+        Produce a clear, friendly explanation of what these emotions may mean
+        and how someone experiencing them might be feeling internally.
+        """
 
-        if "error" in prediction:
-            return prediction
+        user_prompt = f"""
+        Detected Emotions: {emotions}
+        Psychology Context from RAG: {rag_context}
 
-        emotions = prediction["emotions"]
-        confidences = prediction["confidences"]
-        summary = prediction["summary"]
-
-        # Retrieve contextual psychology info
-        rag_context = self.retriever.retrieve(emotions)
-
-        # Construct prompt
-        prompt = f"""
-You are an AI Emotion Specialist.
-
-The user has uploaded an image. A local model detected the following emotions:
-Emotions: {emotions}
-Confidences: {confidences}
-Summary: {summary}
-
-Use the following RAG context to improve your explanation:
-{rag_context}
-
-Return a JSON dictionary with:
-- "emotion_breakdown": explanation of each emotion
-- "likely_cause": what may cause these emotional expressions
-- "confidence_interpretation": meaning of confidence scores
-- "final_summary": 3–5 sentence summary in plain English
-"""
-
-        # Call the LLM
-        response = client.chat.completions.create(
-            model=self.model_name,
-            messages=[
-                {"role": "system", "content": "You specialize in emotion psychology and safe AI reasoning."},
-                {"role": "user", "content": prompt}
-            ]
-        )
-
-        llm_output = response.choices[0].message.content
+        Combine these into a detailed but readable explanation
+        suitable for a mobile mental-health app or wellness dashboard.
+        """
 
         try:
-            parsed = json.loads(llm_output)
-        except json.JSONDecodeError:
-            # fallback if LLM returns plain text
-            parsed = {"llm_raw_output": llm_output}
+            response = client.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                max_tokens=350,
+                temperature=0.6
+            )
 
-        return {
-            "predictions": {
-                "emotions": emotions,
-                "confidences": confidences,
-                "summary": summary,
-            },
-            "rag_context": rag_context,
-            "llm_explanation": parsed
-        }
+            explanation = response.choices[0].message["content"]
+            return explanation
+
+        except Exception as e:
+            return f"LLM Error: {str(e)}"
+
