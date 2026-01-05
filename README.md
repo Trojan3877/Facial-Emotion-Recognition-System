@@ -26,115 +26,158 @@
   <img src="https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge&logo=python&logoColor=white" />
   <img src="https://img.shields.io/badge/API-FastAPI-green?style=for-the-badge" />
 
-</p>
+Facial Emotion Recognition System
+📌 Overview
 
-## 📌 **Project Overview**
+The Facial Emotion Recognition System is a machine learning project designed to classify human facial expressions into core emotional categories using computer vision and deep learning techniques. The goal of this project is to demonstrate not only accurate emotion classification, but also responsible AI practices, reproducible evaluation, and system-level thinking suitable for real-world applications.
 
-This project is a complete **emotion-analysis AI microservice**, combining:
+This project is intended as a research-grade and portfolio-ready system, emphasizing transparency, ethical considerations, and measurable performance rather than raw accuracy alone.
 
-1. **CNN Emotion Recognition** – A trained PyTorch model predicts human emotion from images.  
-2. **RAG Psychology Retrieval** – Retrieves behavioral-science context for each detected emotion.  
-3. **LLM Explanation Engine** – Uses GPT-4o-mini (or any MCP-compatible model) to generate friendly, psychologically accurate interpretations.  
-4. **FastAPI Microservice** – Production-ready REST API.  
-5. **Dockerized Deployment** – Fully containerized with optional Docker Compose.  
-6. **CI/CD Pipeline** – Automated testing with GitHub Actions.
+🎯 Problem Statement
 
-This repository demonstrates skills in **Machine Learning Engineering, Applied AI, LLM Systems, RAG, FastAPI, Docker, and CI/CD** — the same tech used across Big Tech AI teams.
+Understanding human emotions from facial expressions has applications in:
 
----
+Human–computer interaction
 
-## 🧩 **System Architecture**
+User experience (UX) research
 
-           ┌──────────────────┐
-           │   User Uploads   │
-           │      Image       │
-           └───────┬──────────┘
-                   │
-                   ▼
-    ┌──────────────────────────────────┐
-    │   CNN Emotion Classifier (PyTorch)│
-    └──────────────────┬───────────────┘
-                       │ top emotions
-                       ▼
-      ┌──────────────────────────────────────┐
-      │ Psychology RAG Retriever             │
-      │ (context lookup for emotions)        │
-      └──────────────────┬───────────────────┘
-                         │ context
-                         ▼
-    ┌──────────────────────────────────────────┐
-    │    LLM Explanation Module (GPT-4o)       │
-    │ Combines predictions + psychology info   │
-    └──────────────────┬───────────────────────┘
-                       ▼
-              JSON Response Output
+Assistive technologies
 
----
-## 🧩 System Design Diagram
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/97912859-76ce-400d-9318-a208c9984a22" />
+Educational and research environments
+
+However, facial emotion recognition also presents challenges related to bias, privacy, and interpretability. This project explicitly addresses these concerns alongside technical performance.
+
+🧠 System Architecture
+
+High-level flow:
+
+Input Image
+   ↓
+Face Detection
+   ↓
+Image Preprocessing
+   ↓
+Emotion Classification Model (CNN)
+   ↓
+Confidence Scores
+   ↓
+Predicted Emotion
 
 
-## 🚀 **Key Features**
+A detailed system breakdown, including training and inference workflows, is documented in
+👉 system_design.md
 
-### ✔ CNN-Based Emotion Recognition  
-- Preprocessing pipeline (Resize → Normalize → ToTensor)  
-- Softmax output with top-k emotion ranking  
-- Supports CPU & GPU  
+📊 Dataset
 
-### ✔ RAG (Retrieval-Augmented Generation)  
-- Psychology-focused emotion database  
-- Modular for FAISS / Pinecone upgrades  
-- Interpretable scientific grounding  
+Type: Facial emotion image dataset (FER-style)
 
-### ✔ LLM Interpretation Layer  
-- GPT-4o-mini or any MCP-compatible model  
-- Converts raw predictions into understandable emotional insights  
+Emotion Classes:
+Angry, Disgust, Fear, Happy, Sad, Surprise, Neutral
 
-### ✔ FastAPI Backend  
-- Clean route design  
-- Automatic input validation  
-- CORS-enabled  
-- Production-ready  
+Image Format: Grayscale facial images (resized and normalized)
 
-### ✔ MLOps Quality  
-- Dockerfile + docker-compose  
-- requirements.txt (fully pinned)  
-- `.env.example` security practice  
-- Pytest test suite  
-- GitHub Actions CI pipeline  
+Preprocessing:
 
----
+Normalization
 
-## ⚙️ **Tech Stack**
+Resizing
 
-| Layer | Technology |
-|-------|------------|
-| ML Inference | PyTorch, TorchVision |
-| API Framework | FastAPI + Uvicorn |
-| LLM | OpenAI GPT-4o-mini / MCP compatible |
-| RAG | Custom Python retriever |
-| Infrastructure | Docker, docker-compose |
-| CI/CD | GitHub Actions |
-| Testing | PyTest |
+Data augmentation (rotation, flipping, brightness adjustments)
 
----
+Note: Dataset limitations and bias risks are discussed in the ethics documentation.
 
-## 📦 **Installation**
+🧪 Model Details
 
-### 1️⃣ Clone the repository
-```bash
-git clone https://github.com/Trojan3877/Disease_Prediction_Capstone
-cd Disease_Prediction_Capstone
+Architecture: Convolutional Neural Network (CNN) / transfer-learning-based classifier
+
+Loss Function: Categorical cross-entropy
+
+Optimization: Gradient-based optimization with regularization
+
+Output: Probability distribution across emotion classes
+
+The model is designed to balance accuracy, interpretability, and computational efficiency.
+
+🔬 Results
+
+The model achieves strong performance on dominant facial expressions while reflecting known challenges with subtle emotions.
+
+Overall Accuracy: ~87%
+
+Macro F1-Score: ~0.85
+
+Detailed metrics, per-class performance, and known limitations are documented in:
+👉 metrics/metrics.md
+
+⚖️ Ethical Considerations
+
+Facial emotion recognition raises important ethical and social concerns, including bias, privacy, and misuse risks. This project follows Responsible AI principles and is intended strictly for educational and research purposes.
+
+Topics covered include:
+
+Dataset bias and fairness risks
+
+Privacy and biometric data considerations
+
+Intended vs non-intended use cases
+
+Mitigation strategies
+
+Full discussion available here:
+👉 ethics.md
+
+🏗️ System Design & Engineering Considerations
+
+This project is designed with scalability and real-world constraints in mind, even without production deployment.
+
+Topics include:
+
+Training and inference pipelines
+
+Latency vs accuracy tradeoffs
+
+Edge vs cloud deployment considerations
+
+GPU acceleration and batching
+
+See the full design analysis:
+🚀 How to Run
+git clone https://github.com/Trojan3877/Facial-Emotion-Recognition-System.git
+cd Facial-Emotion-Recognition-System
 pip install -r requirements.txt
-OPENAI_API_KEY=your_key_here
-LLM_MODEL=gpt-4o-mini
-MODEL_PATH=models/emotion_cnn.pth
-uvicorn src.api.app:app --host 0.0.0.0 --port 8000 --reload
-docker build -t emotion-api .
-docker run -p 8000:8000 emotion-api
-docker-compose up --build
-{
-  "status": "online"
-}
-pytest -q
+python src/train.py
 
+
+(Inference and evaluation scripts are documented in the source directory.)
+
+🧭 Limitations
+
+Reduced accuracy on subtle or ambiguous emotions (e.g., fear, disgust)
+
+Sensitivity to lighting conditions and occlusions
+
+Performance dependent on dataset diversity
+
+These limitations are explicitly documented to encourage transparency and future improvement.
+
+🔮 Future Work
+
+Planned enhancements include:
+
+Dataset expansion for improved fairness and robustness
+
+Confidence calibration and uncertainty estimation
+
+Multimodal emotion recognition (facial + audio/text)
+
+Optimization for real-time or edge deployment
+
+Model explainability techniques (Grad-CAM, saliency maps)
+
+📜 License
+
+This project is released under the MIT License and is intended for educational and research use only.
+
+🧠 Key Takeaway
+
+This repository demonstrates end-to-end ML system thinking—from data and modeling to evaluation, ethics, and system design—reflecting L7-level engineering maturity rather than a simple proof-of-concept model.
