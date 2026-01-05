@@ -1,0 +1,28 @@
+Facial-Emotion-Recognition-System/
+│
+├── data/
+│   ├── README.md
+│   └── sample_images/
+│
+├── notebooks/
+│   └── exploratory_analysis.ipynb
+│
+├── src/
+│   ├── __init__.py
+│   ├── data_loader.py
+│   ├── model.py
+│   ├── train.py
+│   ├── evaluate.py
+│   └── utils.py
+│
+├── tests/
+│   └── test_model.py
+│
+├── metrics/
+│   └── metrics.md
+│
+├── ethics.md
+├── system_design.md
+├── requirements.txt
+├── README.md
+└── LICENSE
