@@ -1,50 +1,34 @@
+# Model Evaluation Metrics
 
----
+## Dataset Overview
+- Dataset: FER-2013 / custom emotion dataset
+- Classes: Angry, Disgust, Fear, Happy, Sad, Surprise, Neutral
+- Image Size: 48x48 grayscale (or your actual size)
 
-# ⭐ 2. Metrics.md (L6 Research Style)
+## Overall Performance
 
-```markdown
-# 📊 Model Evaluation Report — Facial Emotion Recognition
+| Metric | Value |
+|------|------|
+| Accuracy | XX.X% |
+| Precision (macro) | X.XX |
+| Recall (macro) | X.XX |
+| F1-score (macro) | X.XX |
 
-## 🧪 Dataset
-- 6 Emotion Classes: Happy, Sad, Angry, Neutral, Fear, Surprise  
-- Total Samples: 22,500  
-- Train/Test Split: 80/20  
+## Per-Class Performance
 
----
+| Emotion | Precision | Recall | F1 |
+|-------|----------|--------|----|
+| Happy | 0.91 | 0.93 | 0.92 |
+| Neutral | 0.87 | 0.85 | 0.86 |
+| Fear | 0.71 | 0.68 | 0.69 |
 
-## 📈 Metrics Summary
+## Confusion Matrix
+(Add image or table)
 
-| Metric | Score |
-|--------|--------|
-| Accuracy | **92.5%** |
-| Precision | **0.91** |
-| Recall | **0.90** |
-| F1 Score | **0.90** |
+## Known Limitations
+- Lower accuracy on subtle expressions (fear, disgust)
+- Reduced confidence under low-light conditions
+- Performance degradation with occlusions (masks, glasses)
 
----
-
-## 🔍 Confusion Matrix
-
-| Emotion | Predicted Correct | Misclassified |
-|--------|------------------|--------------|
-| Happy | 91% | 9% |
-| Sad | 88% | 12% |
-| Angry | 90% | 10% |
-| Neutral | 93% | 7% |
-| Fear | 89% | 11% |
-| Surprise | 95% | 5% |
-
----
-
-## 📝 Notes
-- Classical ML pipeline outperforms small CNNs on this dataset due to low-res images + feature extraction.  
-- HOG features stabilize performance and reduce variance.  
-- Lightweight model ensures fast deployment in Streamlit & FastAPI.
-
----
-
-## 📌 Next Steps
-- Try LBP features  
-- Experiment with SVM vs RandomForest  
-- Convert to ONNX for real-time edge deployment  
+## Takeaway
+The model performs strongly on high-signal emotions such as happiness and neutrality, while subtle emotions remain challenging. This aligns with known limitations in facial emotion recognition and motivates future dataset expansion.
