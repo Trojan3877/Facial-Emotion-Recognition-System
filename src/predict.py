@@ -1,88 +1,108 @@
 """
-=========================================================
-FACIAL EMOTION RECOGNITION — INFERENCE SCRIPT (L5/L6 Level)
-Author: Trojan3877 (Corey Leath)
-Description:
-    - Loads trained FER model
-    - Accepts an image path
-    - Preprocesses and predicts the emotion
-    - Returns readable label + confidence
-=========================================================
+===============================================================================
+FACIAL EMOTION RECOGNITION — INFERENCE SCRIPT (PYTORCH L6 STANDARD)
+
+Purpose:
+    CLI-based emotion prediction from image input.
+
+Responsibilities:
+    - Load trained PyTorch model
+    - Preprocess grayscale image
+    - Perform inference
+    - Return structured output
+
+Design Principles:
+    - No TensorFlow
+    - Model logic separated (EmotionModel wrapper)
+    - Explicit tensor shape enforcement
+    - Deterministic inference mode
+
+Future Improvements:
+    - Add face detection preprocessing (MTCNN / Haar cascade)
+    - Add batch inference support
+    - Add API wrapper (FastAPI)
+===============================================================================
 """
 
+import sys
 import cv2
+import torch
 import numpy as np
-import tensorflow as tf
-
-# Emotion categories for FER-2013 dataset
-EMOTION_LABELS = [
-    "Angry", "Disgust", "Fear",
-    "Happy", "Sad", "Surprise", "Neutral"
-]
-
-MODEL_PATH = "emotion_model_final.h5"
-
-# ---------------------------------------------------------
-# Load the trained model
-# ---------------------------------------------------------
-print("📥 Loading model...")
-model = tf.keras.models.load_model(MODEL_PATH)
-print("✅ Model loaded successfully!")
+from src.model import EmotionModel
+from src.config.settings import settings
 
 
-# ---------------------------------------------------------
-# Preprocess image (L6 production style)
-# ---------------------------------------------------------
-def preprocess_image(img_path: str):
-    """Loads and preprocesses an image for FER model."""
+# ==============================================================================
+# PREPROCESSING
+# ==============================================================================
 
-    # Load image in grayscale
+def preprocess_image(img_path: str) -> torch.Tensor:
+    """
+    Loads image and converts to tensor suitable for EmotionCNN.
+
+    Expected Output Shape:
+        (1, 1, 48, 48)
+    """
+
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
-    if img is None:
-        raise ValueError(f"❌ Could not read image: {img_path}")
 
-    # Detect face (optional improvement: Haar cascades)
-    # Resize to 48x48 for FER-2013
+    if img is None:
+        raise ValueError(f"Could not read image at {img_path}")
+
+    # Resize to FER standard
     img = cv2.resize(img, (48, 48))
+
+    # Normalize
     img = img.astype("float32") / 255.0
 
-    # Expand dims → (1, 48, 48, 1)
-    img = np.expand_dims(img, axis=-1)
-    img = np.expand_dims(img, axis=0)
+    # Convert to tensor shape (B, C, H, W)
+    img = np.expand_dims(img, axis=0)  # (1,48,48)
+    img = np.expand_dims(img, axis=0)  # (1,1,48,48)
 
-    return img
+    tensor = torch.tensor(img, dtype=torch.float32)
+
+    return tensor
 
 
-# ---------------------------------------------------------
-# Predict emotion from image
-# ---------------------------------------------------------
+# ==============================================================================
+# PREDICTION
+# ==============================================================================
+
 def predict_emotion(img_path: str):
-    """Runs prediction and returns label + confidence."""
-    img = preprocess_image(img_path)
+    """
+    Performs full inference pipeline.
+    Returns:
+        {
+            emotion: str,
+            confidence: float
+        }
+    """
 
-    preds = model.predict(img)
-    pred_idx = np.argmax(preds)
-    confidence = float(np.max(preds))
+    model = EmotionModel(model_path=settings.MODEL_PATH)
+    face_tensor = preprocess_image(img_path)
 
-    return EMOTION_LABELS[pred_idx], confidence
+    result = model.predict(face_tensor)
+
+    return result
 
 
-# ---------------------------------------------------------
-# Main execution (CLI)
-# ---------------------------------------------------------
+# ==============================================================================
+# CLI ENTRYPOINT
+# ==============================================================================
+
 if __name__ == "__main__":
-    import sys
 
     if len(sys.argv) < 2:
-        print("⚠️ Usage: python src/predict.py <image_path>")
+        print("Usage: python src/predict.py <image_path>")
         sys.exit(1)
 
     image_path = sys.argv[1]
 
     try:
-        label, conf = predict_emotion(image_path)
-        print(f"\n🎯 Predicted Emotion: **{label}**")
-        print(f"📊 Confidence: {conf:.4f}\n")
+        result = predict_emotion(image_path)
+
+        print("\n🎯 Predicted Emotion:", result["emotion"])
+        print("📊 Confidence:", result["confidence"], "\n")
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print("❌ Error:", e)
