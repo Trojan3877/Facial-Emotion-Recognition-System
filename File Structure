@@ -1,5 +1,12 @@
 Facial-Emotion-Recognition-System/
 │
+├── artifacts/
+│   ├── models/
+│   └── logs/
+│
+├── configs/
+│   └── training_config.yaml
+│
 ├── data/
 │   ├── README.md
 │   └── sample_images/
@@ -9,16 +16,23 @@ Facial-Emotion-Recognition-System/
 │
 ├── src/
 │   ├── __init__.py
-│   ├── data_loader.py
+│   ├── dataset.py
 │   ├── model.py
-│   ├── train.py
-│   ├── evaluate.py
+│   ├── inference.py
+│   ├── evaluation.py
 │   └── utils.py
 │
+├── scripts/
+│   └── train.py
+│
 ├── tests/
-│   └── test_model.py
+│   ├── test_model.py
+│   ├── test_dataset.py
+│   └── test_inference.py
 │
 ├── metrics/
+│   ├── confusion_matrix.png
+│   ├── classification_report.txt
 │   └── metrics.md
 │
 ├── ethics.md
