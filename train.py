@@ -1,77 +1,177 @@
 """
-=========================================================
-FACIAL EMOTION RECOGNITION — TRAINING SCRIPT (L5/L6 Level)
-Author: Trojan3877 (Corey Leath)
-Description:
-    - Loads FER-2013 dataset
-    - Preprocesses pixel strings into 48x48 grayscale images
-    - Builds a CNN model (L5/L6 quality)
-    - Trains with callbacks (EarlyStopping, Checkpoints)
-    - Saves trained model + history.json
-=========================================================
+================================================================================
+FACIAL EMOTION RECOGNITION — TRAINING PIPELINE (L6 ENGINEERING STANDARD)
+Author: Corey Leath (Trojan3877)
+
+Purpose:
+    Train a CNN-based emotion classification model on the FER-2013 dataset.
+
+Architecture Role:
+    This script orchestrates:
+        - Data loading
+        - Preprocessing
+        - Train/validation split
+        - Model construction
+        - Training with callbacks
+        - Artifact persistence (model + metrics)
+
+Design Decisions:
+    - Uses full in-memory dataset loading (acceptable for FER-2013 size).
+    - Sequential CNN chosen for interpretability and reproducibility.
+    - Adam optimizer with low LR for stable convergence.
+    - EarlyStopping prevents overfitting on small dataset.
+    - ModelCheckpoint preserves best validation accuracy weights.
+
+Tradeoffs:
+    - In-memory loading increases RAM usage (not scalable to large datasets).
+    - Sequential API over Functional API for simplicity.
+    - No data augmentation (kept deterministic for baseline reproducibility).
+
+Future Production Improvements:
+    - Replace NumPy loading with tf.data pipeline.
+    - Add TensorBoard logging.
+    - Add mixed precision training.
+    - Add data augmentation layer.
+================================================================================
 """
 
 import os
 import json
+import logging
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 from tensorflow.keras import layers, models
 from sklearn.model_selection import train_test_split
 
-# =========================================================
-# 1. REPRODUCIBILITY
-# =========================================================
-tf.random.set_seed(42)
-np.random.seed(42)
 
-# =========================================================
-# 2. LOAD DATASET
-# =========================================================
-CSV_PATH = "fer2013.csv"
+# ==============================================================================
+# 1. CONFIGURATION
+# ==============================================================================
 
-if not os.path.exists(CSV_PATH):
-    raise FileNotFoundError(f"❌ Dataset not found! Expected at: {CSV_PATH}")
+class Config:
+    CSV_PATH = "fer2013.csv"
+    RANDOM_SEED = 42
+    TEST_SPLIT = 0.1
+    NUM_CLASSES = 7
+    IMAGE_SIZE = (48, 48, 1)
+    EPOCHS = 50
+    BATCH_SIZE = 64
+    LEARNING_RATE = 1e-4
 
-print("📥 Loading FER-2013 dataset...")
-df = pd.read_csv(CSV_PATH)
 
-# Validate required columns
-required_cols = {"emotion", "pixels", "Usage"}
-if not required_cols.issubset(df.columns):
-    raise ValueError("❌ CSV missing required columns: emotion, pixels, Usage")
+# ==============================================================================
+# 2. LOGGING SETUP
+# ==============================================================================
 
-print("✅ Dataset loaded successfully.")
-
-# =========================================================
-# 3. PREPROCESSING
-# =========================================================
-print("🧹 Preprocessing pixel data...")
-
-def preprocess_pixels(pixel_string):
-    pixels = np.array(pixel_string.split(), dtype="float32")
-    return pixels.reshape(48, 48, 1) / 255.0
-
-X = np.array(list(map(preprocess_pixels, df["pixels"])))
-y = tf.keras.utils.to_categorical(df["emotion"], num_classes=7)
-
-print(f"📊 Dataset shape: {X.shape}, Labels: {y.shape}")
-
-# Split into train/val
-X_train, X_val, y_train, y_val = train_test_split(
-    X, y, test_size=0.1, random_state=42, stratify=y
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s"
 )
+logger = logging.getLogger(__name__)
 
-print(f"📚 Train: {X_train.shape}, Validation: {X_val.shape}")
 
-# =========================================================
-# 4. MODEL ARCHITECTURE (L6 QUALITY)
-# =========================================================
-print("🏗 Building CNN model...")
+# ==============================================================================
+# 3. REPRODUCIBILITY
+# ==============================================================================
 
-def build_model():
+def set_seed(seed: int):
+    """
+    Ensures deterministic behavior across NumPy and TensorFlow.
+    Note: True determinism may require additional GPU-level configuration.
+    """
+    np.random.seed(seed)
+    tf.random.set_seed(seed)
+
+
+# ==============================================================================
+# 4. DATA LOADING
+# ==============================================================================
+
+def load_dataset(csv_path: str) -> pd.DataFrame:
+    """
+    Loads FER-2013 dataset from CSV.
+
+    Raises:
+        FileNotFoundError if dataset is missing.
+        ValueError if required columns are absent.
+    """
+    if not os.path.exists(csv_path):
+        raise FileNotFoundError(f"Dataset not found at {csv_path}")
+
+    df = pd.read_csv(csv_path)
+
+    required_cols = {"emotion", "pixels", "Usage"}
+    if not required_cols.issubset(df.columns):
+        raise ValueError("CSV missing required columns.")
+
+    logger.info("Dataset loaded successfully.")
+    return df
+
+
+# ==============================================================================
+# 5. PREPROCESSING
+# ==============================================================================
+
+def preprocess_pixels(pixel_string: str) -> np.ndarray:
+    """
+    Converts FER pixel string into normalized 48x48 grayscale image.
+
+    Design Choice:
+        Normalize to [0,1] to stabilize gradient descent.
+
+    Complexity:
+        O(n) per sample where n = 48*48.
+    """
+    pixels = np.array(pixel_string.split(), dtype="float32")
+    image = pixels.reshape(Config.IMAGE_SIZE)
+    return image / 255.0
+
+
+def prepare_data(df: pd.DataFrame):
+    """
+    Converts raw dataframe into train/validation splits.
+
+    Tradeoff:
+        Full dataset loaded into memory.
+        Acceptable for FER-2013 (~35k images).
+    """
+    X = np.array(list(map(preprocess_pixels, df["pixels"])))
+    y = tf.keras.utils.to_categorical(df["emotion"], Config.NUM_CLASSES)
+
+    X_train, X_val, y_train, y_val = train_test_split(
+        X,
+        y,
+        test_size=Config.TEST_SPLIT,
+        random_state=Config.RANDOM_SEED,
+        stratify=y
+    )
+
+    logger.info(f"Train shape: {X_train.shape}")
+    logger.info(f"Validation shape: {X_val.shape}")
+
+    return X_train, X_val, y_train, y_val
+
+
+# ==============================================================================
+# 6. MODEL ARCHITECTURE
+# ==============================================================================
+
+def build_model() -> tf.keras.Model:
+    """
+    Builds CNN architecture.
+
+    Architecture Rationale:
+        - Stacked Conv blocks increase representational depth.
+        - BatchNorm improves convergence stability.
+        - Dropout mitigates overfitting on small dataset.
+        - Dense(256) balances expressiveness with parameter count.
+
+    Parameter Count:
+        ~3-4M parameters depending on configuration.
+    """
     model = models.Sequential([
-        layers.Input(shape=(48, 48, 1)),
+        layers.Input(shape=Config.IMAGE_SIZE),
 
         layers.Conv2D(32, (3, 3), activation="relu", padding="same"),
         layers.BatchNormalization(),
@@ -96,62 +196,69 @@ def build_model():
         layers.BatchNormalization(),
         layers.Dropout(0.5),
 
-        layers.Dense(7, activation="softmax")
+        layers.Dense(Config.NUM_CLASSES, activation="softmax")
     ])
 
     model.compile(
-        optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001),
+        optimizer=tf.keras.optimizers.Adam(learning_rate=Config.LEARNING_RATE),
         loss="categorical_crossentropy",
-        metrics=["accuracy"],
+        metrics=["accuracy"]
     )
 
     return model
 
-model = build_model()
-model.summary()
 
-# =========================================================
-# 5. CALLBACKS
-# =========================================================
-callbacks = [
-    tf.keras.callbacks.EarlyStopping(
-        monitor="val_loss",
-        patience=10,
-        restore_best_weights=True
-    ),
-    tf.keras.callbacks.ModelCheckpoint(
-        "emotion_model_best.h5",
-        monitor="val_accuracy",
-        save_best_only=True
+# ==============================================================================
+# 7. TRAINING
+# ==============================================================================
+
+def train():
+    logger.info("Initializing training pipeline.")
+    set_seed(Config.RANDOM_SEED)
+
+    df = load_dataset(Config.CSV_PATH)
+    X_train, X_val, y_train, y_val = prepare_data(df)
+
+    model = build_model()
+    model.summary()
+
+    callbacks = [
+        tf.keras.callbacks.EarlyStopping(
+            monitor="val_loss",
+            patience=10,
+            restore_best_weights=True
+        ),
+        tf.keras.callbacks.ModelCheckpoint(
+            "emotion_model_best.h5",
+            monitor="val_accuracy",
+            save_best_only=True
+        )
+    ]
+
+    logger.info("Starting training.")
+
+    history = model.fit(
+        X_train,
+        y_train,
+        epochs=Config.EPOCHS,
+        batch_size=Config.BATCH_SIZE,
+        validation_data=(X_val, y_val),
+        callbacks=callbacks
     )
-]
 
-# =========================================================
-# 6. TRAINING
-# =========================================================
-print("🚀 Starting training...")
+    logger.info("Training complete.")
 
-history = model.fit(
-    X_train, y_train,
-    epochs=50,
-    batch_size=64,
-    validation_data=(X_val, y_val),
-    callbacks=callbacks,
-)
+    model.save("emotion_model_final.h5")
 
-print("🎉 Training complete!")
+    with open("history.json", "w") as f:
+        json.dump(history.history, f, indent=4)
 
-# =========================================================
-# 7. SAVE MODEL + HISTORY
-# =========================================================
-model.save("emotion_model_final.h5")
-print("💾 Final model saved as 'emotion_model_final.h5'")
+    logger.info("Artifacts saved successfully.")
 
-# Save training history
-with open("history.json", "w") as f:
-    json.dump(history.history, f, indent=4)
 
-print("📈 Training history saved to 'history.json'")
+# ==============================================================================
+# 8. ENTRYPOINT
+# ==============================================================================
 
-# =========================================================
-print("\n✅ Training workflow complete! Your model is L5/L6 ready.\n")
+if __name__ == "__main__":
+    train()
