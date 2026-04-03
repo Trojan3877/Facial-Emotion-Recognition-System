@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 from src.pipeline.inference import EmotionPipeline
-from src.rag.context_retriever import EmotionContextRetriever
-from src.llm.explainer import EmotionLLMExplainer
+from src.src.rag.context_retriever import EmotionContextRetriever
+from src.src.llm_explainer.explain import EmotionLLMExplainer
 
 
 # Initialize components
@@ -105,4 +105,4 @@ async def full_analysis(image: UploadFile = File(...)):
 
 # Run the server (local development)
 if __name__ == "__main__":
-    uvicorn.run("src.api.app:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("src.api.main:app", host="0.0.0.0", port=8000, reload=True)

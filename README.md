@@ -198,3 +198,65 @@ Clear system design
 
 This is not a notebook demo.
 This is a production-style ML system.
+
+---
+
+## What Changed (Latest Update)
+
+The following targeted fixes were applied to improve reliability and correctness:
+
+### Bug Fixes
+- **Import path mismatches resolved** — `src/src/modeling/model.py`, `src/predict.py`, and `src/api/main.py` had incorrect module paths that caused `ImportError` at startup. All paths corrected to match the actual `src/src/` package layout.
+- **Created `src/model.py` shim** — Re-exports `EmotionCNN`, `ResNetEmotion`, `EmotionModel`, and `EMOTION_LABELS` from the correct location, fixing `tests/test_model.py`, `src/train.py`, and `src/evaluate.py`.
+- **Created `src/dataset.py`** — `FERDataset` is now a standalone importable module (was previously only defined inline in `src/train.py`), fixing `src/evaluate.py` and `tests/test_model.py`.
+- **Fixed `streamlit_app.py`** — Removed broken `from predict import EMOTION_LABELS` (no root-level `predict.py` existed); `EMOTION_LABELS` is now defined locally.
+- **Fixed deprecated `np.fromstring()`** — Replaced with `np.array(...split()...)` in `visualize.py` and `src/preprocess.py` for NumPy ≥ 1.24 compatibility.
+- **Fixed OpenAI API response access** — `response.choices[0].message["content"]` → `.message.content` in `src/src/llm_explainer/explain.py` (required by openai ≥ 1.0).
+- **Fixed Dockerfile** — Corrected entry point from `src.api.app:app` (non-existent) to `src.api.main:app`; also corrected requirements filename case to `Requirements.txt`.
+- **Fixed `metrix_tracking.py`** — Replaced non-existent `metrixflow` package with `mlflow`.
+- **Fixed test import paths** — `tests/tests/test_api.py` and `tests/tests/test_llm.py` updated to use correct module paths.
+- **Fixed `tests/tests/tests/test_rag.py`** — Updated `from src.rag.context_retriever` to `from src.src.rag.context_retriever`.
+
+### Dependency Updates (`Requirements.txt`)
+Added missing packages:
+- `tensorflow==2.16.1` — used by root-level `train.py`, `streamlit_app.py`, `visualize.py`
+- `opencv-python-headless==4.9.0.80` — used by `streamlit_app.py`, `visualize.py`, `detect_faces.py`
+- `pandas==2.2.1` — used by training and evaluation scripts
+- `matplotlib==3.8.3` + `seaborn==0.13.2` — used by `visualize.py`
+- `streamlit==1.32.2` — used by `streamlit_app.py`
+- `python-dotenv==1.0.1` — used by `src/src/config/settings.py`
+- `PyYAML==6.0.1` — used by `src/preprocess.py`
+- `mlflow==3.9.0` — replaces the non-existent `metrixflow` package
+- `pytest==8.1.1` — for running the test suite
+
+### Package Structure
+- Added `__init__.py` to all package directories (`src/`, `src/api/`, `src/pipeline/`, `src/src/`, `src/src/modeling/`, `src/src/config/`, `src/src/rag/`, `src/src/llm_explainer/`, `src/src/detection/`, `src/src/inference/`, `tests/`, `tests/tests/`).
+
+### CI
+- Populated the previously empty `.github/workflows/ci.yml` with a working GitHub Actions pipeline that runs `tests/test_model.py`, RAG tests, and smoke-checks key imports.
+
+## How to Run / Verify
+
+```bash
+# Install dependencies (CPU-only torch for local dev)
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+pip install -r Requirements.txt
+
+# Verify key imports
+python -c "from src.model import EmotionCNN, EmotionModel, EMOTION_LABELS; print('OK')"
+python -c "from src.dataset import FERDataset; print('OK')"
+python -c "from src.src.rag.context_retriever import EmotionContextRetriever; print('OK')"
+
+# Run tests
+python -m pytest tests/test_model.py -v
+python -m pytest tests/tests/tests/test_rag.py -v
+
+# Train (PyTorch, requires fer2013.csv)
+python src/train.py --model cnn
+
+# Start FastAPI server
+uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
+
+# Launch Streamlit UI (requires emotion_model_final.h5)
+streamlit run streamlit_app.py
+```

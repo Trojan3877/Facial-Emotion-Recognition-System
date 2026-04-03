@@ -32,7 +32,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import models
-from src.config.settings import settings
+from src.src.config.settings import settings
 
 
 # ==============================================================================

@@ -13,7 +13,8 @@ import streamlit as st
 import cv2
 import numpy as np
 import tensorflow as tf
-from predict import preprocess_image, EMOTION_LABELS
+
+EMOTION_LABELS = ["Angry", "Disgust", "Fear", "Happy", "Sad", "Surprise", "Neutral"]
 
 MODEL_PATH = "emotion_model_final.h5"
 

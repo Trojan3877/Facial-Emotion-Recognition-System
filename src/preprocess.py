@@ -24,7 +24,7 @@ def load_and_preprocess():
     df = pd.read_csv(RAW_DATA_PATH)
 
     # Extract pixel data and convert to array
-    pixels = df['pixels'].apply(lambda x: np.fromstring(x, sep=' '))
+    pixels = df['pixels'].apply(lambda x: np.array(x.split(), dtype='float32'))
     images = np.stack(pixels.to_numpy())
     images = images.reshape(-1, IMAGE_SIZE, IMAGE_SIZE, 1).astype('float32') / 255.0
 

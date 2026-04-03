@@ -1,4 +1,4 @@
-from src.llm.explainer import EmotionLLMExplainer
+from src.src.llm_explainer.explain import EmotionLLMExplainer
 
 def test_llm_explanation(monkeypatch):
 

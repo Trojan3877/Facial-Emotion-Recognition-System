@@ -9,16 +9,32 @@ uvicorn==0.29.0
 # -------------------------
 torch==2.2.1
 torchvision==0.17.1
+tensorflow==2.16.1
 
 # Image processing
 Pillow==10.2.0
+opencv-python-headless==4.9.0.80
 
 # -------------------------
 # Data / Utilities
 # -------------------------
 numpy==1.26.4
+pandas==2.2.1
 python-multipart==0.0.9
 pydantic==2.6.3
+python-dotenv==1.0.1
+PyYAML==6.0.1
+
+# -------------------------
+# Visualization
+# -------------------------
+matplotlib==3.8.3
+seaborn==0.13.2
+
+# -------------------------
+# Web UI
+# -------------------------
+streamlit==1.32.2
 
 # -------------------------
 # LLM / OpenAI Client
@@ -32,6 +48,12 @@ scikit-learn==1.4.1
 sentence-transformers==2.3.1   # optional future upgrade
 
 # -------------------------
+# Experiment Tracking
+# -------------------------
+mlflow==3.9.0
+
+# -------------------------
 # Development Tools
 # -------------------------
 loguru==0.7.2
+pytest==8.1.1

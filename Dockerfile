@@ -27,10 +27,10 @@ WORKDIR /app
 # ---------------------------------------------------------
 # 4. Copy Requirements & Install
 # ---------------------------------------------------------
-COPY requirements.txt .
+COPY Requirements.txt .
 
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+    pip install -r Requirements.txt
 
 
 # ---------------------------------------------------------
@@ -48,4 +48,4 @@ EXPOSE 8000
 # ---------------------------------------------------------
 # 7. Run FastAPI with Uvicorn
 # ---------------------------------------------------------
-CMD ["uvicorn", "src.api.app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

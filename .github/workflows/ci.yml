@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "copilot/**"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('Requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch==2.2.1 torchvision==0.17.1 --index-url https://download.pytorch.org/whl/cpu
+          pip install numpy==1.26.4 pandas==2.2.1 scikit-learn==1.4.1 Pillow==10.2.0
+          pip install fastapi==0.110.1 uvicorn==0.29.0 pydantic==2.6.3 python-multipart==0.0.9
+          pip install openai==1.14.0 loguru==0.7.2 python-dotenv==1.0.1
+          pip install pytest==8.1.1 httpx
+
+      - name: Run unit tests (model + dataset)
+        run: |
+          python -m pytest tests/test_model.py -v
+
+      - name: Run RAG tests
+        run: |
+          python -m pytest tests/tests/tests/test_rag.py -v
+
+      - name: Smoke-test imports
+        run: |
+          python -c "from src.model import EmotionCNN, EmotionModel, EMOTION_LABELS; print('src.model OK')"
+          python -c "from src.dataset import FERDataset; print('src.dataset OK')"
+          python -c "from src.src.rag.context_retriever import EmotionContextRetriever; print('RAG OK')"
+          python -c "from src.src.modeling.model import EmotionCNN; print('modeling OK')"
