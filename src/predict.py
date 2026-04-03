@@ -29,7 +29,7 @@ import cv2
 import torch
 import numpy as np
 from src.model import EmotionModel
-from src.config.settings import settings
+from src.src.config.settings import settings
 
 
 # ==============================================================================

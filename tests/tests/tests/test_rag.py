@@ -1,4 +1,4 @@
-from src.rag.context_retriever import EmotionContextRetriever
+from src.src.rag.context_retriever import EmotionContextRetriever
 
 def test_rag_returns_context():
     rag = EmotionContextRetriever()

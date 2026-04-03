@@ -79,7 +79,7 @@ def load_dataset():
     import pandas as pd
 
     df = pd.read_csv(CSV_PATH)
-    pixels = np.array([np.fromstring(p, sep=" ").reshape(48, 48, 1) for p in df["pixels"]])
+    pixels = np.array([np.array(p.split(), dtype="float32").reshape(48, 48, 1) for p in df["pixels"]])
     pixels = pixels / 255.0
 
     labels = df["emotion"].values

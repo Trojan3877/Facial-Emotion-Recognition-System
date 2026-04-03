@@ -24,7 +24,7 @@ class EmotionContextRetriever:
             ),
             "angry": (
                 "Anger is connected to perceived threats or injustice. Physiological signs "
-                include increased heart rate, tense muscles, and direct gaze."
+                "include increased heart rate, tense muscles, and direct gaze."
             ),
             "fear": (
                 "Fear activates the amygdala, triggering fight-or-flight responses. "

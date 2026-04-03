@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from src.api.app import app
+from src.api.main import app
 
 client = TestClient(app)
 
@@ -22,7 +22,7 @@ def test_explain_endpoint(monkeypatch):
     def mock_explain(self, emotions, rag_context):
         return "Mock explanation"
 
-    from src.llm.explainer import EmotionLLMExplainer
+    from src.src.llm_explainer.explain import EmotionLLMExplainer
     monkeypatch.setattr(EmotionLLMExplainer, "explain_emotions", mock_explain)
 
     payload = {"emotions": ["sad"]}

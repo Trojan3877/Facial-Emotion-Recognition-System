@@ -77,7 +77,7 @@ class EmotionLLMExplainer:
                 temperature=0.6
             )
 
-            explanation = response.choices[0].message["content"]
+            explanation = response.choices[0].message.content
             return explanation
 
         except Exception as e:

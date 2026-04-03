@@ -1,8 +1,5 @@
-from metrixflow import Tracker
-
-tracker = Tracker(project="FacialEmotionRecognition", uri="./metrics.db")
+import mlflow
 
 def log_metric(metric_name, value):
-    tracker.log_metric(metric_name, value)
-    tracker.commit()
+    mlflow.log_metric(metric_name, value)
     print(f"📈 {metric_name}: {value}")
