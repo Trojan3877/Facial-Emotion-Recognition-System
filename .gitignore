@@ -18,13 +18,11 @@ env/
 # ----------------------------------------------------
 # Environment Variables
 # ----------------------------------------------------
+# .env contains real secrets — never commit it.
+# Use .env.example as the committed template.
 .env
 .env.*
-
-# Never commit secrets
-OPENAI_API_KEY
-HF_API_KEY
-CUSTOM_LLM_ENDPOINT
+!.env.example
 
 # ----------------------------------------------------
 # Build / Cache Files
@@ -36,11 +34,17 @@ CUSTOM_LLM_ENDPOINT
 logs/
 
 # ----------------------------------------------------
-# PyTorch Model Files
+# PyTorch / Keras Model Weight Files
 # ----------------------------------------------------
 *.pth
 *.pt
-models/
+*.h5
+models/*.pth
+models/*.pt
+models/*.h5
+artifacts/models/*.pth
+artifacts/models/*.pt
+artifacts/models/*.h5
 
 # ----------------------------------------------------
 # Docker
@@ -54,3 +58,10 @@ docker-compose.override.yml
 Thumbs.db
 .idea/
 .vscode/
+
+# ----------------------------------------------------
+# ML Artifacts
+# ----------------------------------------------------
+mlruns/
+metrics/
+assets/

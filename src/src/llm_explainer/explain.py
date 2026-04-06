@@ -5,9 +5,6 @@ from pydantic import BaseModel
 # If using OpenAI or MCP-compatible models
 from openai import OpenAI
 
-# Initialize OpenAI client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
 
 class LLMResponse(BaseModel):
     emotions: List[str]
@@ -67,6 +64,7 @@ class EmotionLLMExplainer:
         """
 
         try:
+            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
             response = client.chat.completions.create(
                 model=self.model_name,
                 messages=[

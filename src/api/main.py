@@ -1,4 +1,7 @@
-from fastapi import FastAPI, UploadFile, File
+from contextlib import asynccontextmanager
+from typing import Optional
+
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
@@ -7,10 +10,24 @@ from src.src.rag.context_retriever import EmotionContextRetriever
 from src.src.llm_explainer.explain import EmotionLLMExplainer
 
 
-# Initialize components
-pipeline = EmotionPipeline()
-rag = EmotionContextRetriever()
-llm = EmotionLLMExplainer()
+# ---------------------------------------------------------------------------
+# Application state
+# ---------------------------------------------------------------------------
+
+pipeline: Optional[EmotionPipeline] = None
+rag: Optional[EmotionContextRetriever] = None
+llm: Optional[EmotionLLMExplainer] = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initialize heavy components once at startup."""
+    global pipeline, rag, llm
+    pipeline = EmotionPipeline()
+    rag = EmotionContextRetriever()
+    llm = EmotionLLMExplainer()
+    yield
+    # cleanup (if needed) goes here
 
 
 # FastAPI App
@@ -18,6 +35,7 @@ app = FastAPI(
     title="Facial Emotion Recognition + LLM + RAG API",
     description="A production-ready API for emotion classification with LLM explanations.",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 
@@ -40,11 +58,30 @@ def home():
     return {"status": "online", "message": "Emotion AI API Running Successfully!"}
 
 
+@app.get("/health")
+def health():
+    """
+    Health check endpoint.
+    Returns model status so orchestrators can determine readiness.
+    """
+    model_ready = pipeline is not None and pipeline.model is not None
+    return {
+        "status": "ok",
+        "model_loaded": model_ready,
+        "model_error": (
+            "Model weights not found. Train the model with "
+            "`python src/train.py --model cnn` and ensure MODEL_PATH is set correctly."
+        ) if not model_ready else None,
+    }
+
+
 @app.post("/predict")
 async def predict_emotion(image: UploadFile = File(...)):
     """
     Endpoint: Perform CNN-based emotion prediction.
     """
+    if pipeline is None or pipeline.model is None:
+        raise HTTPException(status_code=503, detail="Model not loaded.")
     predictions = pipeline.predict(image)
     return {"predictions": predictions}
 
@@ -87,6 +124,9 @@ async def full_analysis(image: UploadFile = File(...)):
     2. Retrieve RAG psychology context
     3. Generate LLM explanation
     """
+    if pipeline is None or pipeline.model is None:
+        raise HTTPException(status_code=503, detail="Model not loaded.")
+
     predictions = pipeline.predict(image)
     
     rag_context = rag.retrieve(predictions)

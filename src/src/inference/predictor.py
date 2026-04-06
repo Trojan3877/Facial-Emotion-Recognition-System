@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
-from src.detection.detect_faces import FaceDetector
-from src.modeling.model import EmotionModel
-from src.config.settings import settings
+from src.src.detection.detect_faces import FaceDetector
+from src.src.modeling.model import EmotionModel
+from src.src.config.settings import settings
 
 
 class EmotionPredictor:

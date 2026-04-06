@@ -47,9 +47,16 @@ jobs:
         run: |
           python -m pytest tests/tests/tests/test_rag.py -v
 
+      - name: Run API tests
+        run: |
+          python -m pytest tests/tests/test_api.py -v
+
       - name: Smoke-test imports
         run: |
           python -c "from src.model import EmotionCNN, EmotionModel, EMOTION_LABELS; print('src.model OK')"
           python -c "from src.dataset import FERDataset; print('src.dataset OK')"
           python -c "from src.src.rag.context_retriever import EmotionContextRetriever; print('RAG OK')"
           python -c "from src.src.modeling.model import EmotionCNN; print('modeling OK')"
+          python -c "from src.pipeline.inference import EmotionPipeline; print('pipeline OK')"
+          python -c "from src.src.llm_explainer.explain import EmotionLLMExplainer; print('llm_explainer OK')"
+          python -c "from src.api.main import app; print('api OK')"
