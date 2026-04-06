@@ -150,6 +150,7 @@ def train(model, train_loader, val_loader, device):
         # Early stopping
         if val_acc > best_val_acc:
             best_val_acc = val_acc
+            os.makedirs("artifacts/models", exist_ok=True)
             torch.save(model.state_dict(), "artifacts/models/best_model.pt")
             patience_counter = 0
         else:

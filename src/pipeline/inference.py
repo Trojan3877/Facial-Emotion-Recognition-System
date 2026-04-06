@@ -1,8 +1,13 @@
 import io
+import logging
+from typing import Optional
+
 import torch
 import torch.nn.functional as F
 from PIL import Image
 from torchvision import transforms
+
+logger = logging.getLogger(__name__)
 
 
 class EmotionPipeline:
@@ -12,9 +17,15 @@ class EmotionPipeline:
 
     def __init__(self, model_path: str = "models/emotion_cnn.pth"):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.model = self._load_model(model_path)
-        self.model.to(self.device)
-        self.model.eval()
+        self._load_error: Optional[str] = None
+        try:
+            self.model = self._load_model(model_path)
+            self.model.to(self.device)
+            self.model.eval()
+        except Exception as e:
+            self.model = None
+            self._load_error = str(e)
+            logger.warning(f"EmotionPipeline: model not loaded — {e}")
 
         # Standard CNN preprocessing
         self.transform = transforms.Compose([
@@ -52,6 +63,11 @@ class EmotionPipeline:
         4. Convert logits → probabilities
         5. Return top predicted labels
         """
+        if self.model is None:
+            raise RuntimeError(
+                f"Model weights not loaded. {self._load_error}"
+            )
+
         # Load image bytes
         image_bytes = image_file.file.read()
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
