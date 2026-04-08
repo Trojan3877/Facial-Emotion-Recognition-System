@@ -69,3 +69,39 @@ Prediction / evaluation pipeline
     ↓
 Metrics artifacts and inference output
 
+Quick start
+Install dependencies:
+Bash
+pip install -r Requirements.txt
+Train a model:
+Bash
+python src/train.py --model cnn
+or
+Bash
+python src/train.py --model resnet
+Evaluate a model:
+Bash
+python src/evaluate.py
+Run inference:
+Bash
+python src/inference.py path/to/image.jpg
+Local verification checklist
+A reviewer can validate the project with a few quick steps:
+Bash
+# install dependencies
+pip install -r Requirements.txt
+
+# verify important imports
+python -c "from src.model import EmotionCNN, EmotionModel, EMOTION_LABELS; print('OK')"
+python -c "from src.dataset import FERDataset; print('OK')"
+
+# run tests
+python -m pytest tests/test_model.py -v
+
+# train a model
+python src/train.py --model cnn
+
+# run evaluation
+python src/evaluate.py
+
+
