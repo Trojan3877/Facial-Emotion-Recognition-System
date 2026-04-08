@@ -114,4 +114,13 @@ scripts/     CLI workflows
 tests/       unit and smoke tests
 metrics/     evaluation outputs
 
+Why does this repo stand out from a basic vision project?
+Because it is structured around training, evaluation, inference, artifacts, and maintainability rather than only a notebook demo.
+Why include both CNN and ResNet18?
+Because it shows engineering tradeoff thinking between lightweight models and stronger transfer-learning backbones.
+What would you improve next for production use?
+I would add experiment versioning, stronger benchmark reporting, a formal serving layer, and a more complete input pipeline including face detection and preprocessing standardization.
+Why include ethics and limitations in the README?
+Because responsible ML engineering includes communicating where a model should not be trusted or misapplied.
+
 
