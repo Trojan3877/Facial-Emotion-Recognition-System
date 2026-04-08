@@ -104,4 +104,14 @@ python src/train.py --model cnn
 # run evaluation
 python src/evaluate.py
 
+Repository structure
+Plain text
+artifacts/   saved models
+configs/     training configuration support
+data/        dataset-related resources
+src/         core training, evaluation, inference, and model code
+scripts/     CLI workflows
+tests/       unit and smoke tests
+metrics/     evaluation outputs
+
 
