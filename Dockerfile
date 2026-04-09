@@ -1,7 +1,7 @@
 # ---------------------------------------------------------
-# 1. Base Image — Official Python 3.10 Slim
+# 1. Base Image — Official Python 3.11 Slim
 # ---------------------------------------------------------
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 # Prevent Python from writing .pyc files and buffering stdout
 ENV PYTHONDONTWRITEBYTECODE=1
