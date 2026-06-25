@@ -1,51 +1,20 @@
-# ---------------------------------------------------------
-# 1. Base Image — Official Python 3.11 Slim
-# ---------------------------------------------------------
 FROM python:3.11-slim
 
-# Prevent Python from writing .pyc files and buffering stdout
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# ---------------------------------------------------------
-# 2. Install System Dependencies
-# ---------------------------------------------------------
+# Install vital Linux OS-level dependencies for OpenCV matrix transformations
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
     build-essential \
-    libgl1 \
+    libgl1-mesa-glx \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
+WORKDIR /workspace
 
-# ---------------------------------------------------------
-# 3. Set Working Directory
-# ---------------------------------------------------------
-WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-
-# ---------------------------------------------------------
-# 4. Copy Requirements & Install
-# ---------------------------------------------------------
-COPY Requirements.txt .
-
-RUN pip install --upgrade pip && \
-    pip install -r Requirements.txt
-
-
-# ---------------------------------------------------------
-# 5. Copy Project Files
-# ---------------------------------------------------------
 COPY . .
 
+EXPOSE 8501
 
-# ---------------------------------------------------------
-# 6. Expose API Port
-# ---------------------------------------------------------
-EXPOSE 8000
-
-
-# ---------------------------------------------------------
-# 7. Run FastAPI with Uvicorn
-# ---------------------------------------------------------
-CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["python", "-m", "streamlit", "run", "app/dashboard.py"]
