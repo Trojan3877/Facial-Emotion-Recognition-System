@@ -1,37 +1,13 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  emotion-api:
-    container_name: emotion_ai_service
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    env_file:
-      - .env
-    volumes:
-      - ./:/app
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request, sys; r = urllib.request.urlopen('http://localhost:8000/health'); sys.exit(0 if r.status == 200 else 1)"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
-  streamlit-ui:
-    container_name: emotion_streamlit_ui
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+  emotion-recognition:
+    build: .
+    container_name: facial_emotion_platform
     ports:
       - "8501:8501"
-    env_file:
-      - .env
     volumes:
-      - ./:/app
-    depends_on:
-      - emotion-api
+      - .:/workspace
+    environment:
+      - MLFLOW_TRACKING_URI=http://localhost:5000
     restart: unless-stopped
