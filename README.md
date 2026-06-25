@@ -4,7 +4,9 @@
 [![Python Version](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
 [![Docker Architecture](https://img.shields.io/badge/Architecture-Multi--Stage%20Container-orange.svg)](https://www.docker.com/)
 [![MLOps Tracking](https://img.shields.io/badge/Experiment%20Tracking-MLflow-green.svg)](https://mlflow.org/)
-
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.15+-FF6F00?style=flat&logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.9+-5C3EE8?style=flat&logo=opencv&logoColor=white)](https://opencv.org/)
+[![Streamlit](https://img.shields.io/badge/Control%20Plane-Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)](https://streamlit.io/)
 An enterprise-grade, high-throughput computer vision edge-inference pipeline and observability control plane. This platform moves past basic synchronous frame execution script architectures by implementing a **decoupled asynchronous frame streaming ingestion consumer** side-by-side with localized model-inference loops, an **MLflow-audited model training registry**, and an interactive telemetry dashboard.
 
 ---
