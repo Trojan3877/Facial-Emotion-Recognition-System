@@ -21,17 +21,11 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      # FIXED: Provisions Ubuntu mirror tags non-interactively to bypass apt container freezes
-      - name: 🖼️ Install OpenCV System Dependencies
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends libgl1-mesa-glx libglib2.0-0
-
+      # FIXED: Swapped out apt-get entirely for headless pip installation to bypass mirror stalls
       - name: 📦 Install Package Dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install opencv-python-headless
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install pytest pytest-cov
 
