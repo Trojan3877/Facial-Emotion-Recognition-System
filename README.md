@@ -7,6 +7,20 @@
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.15+-FF6F00?style=flat&logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-4.9+-5C3EE8?style=flat&logo=opencv&logoColor=white)](https://opencv.org/)
 [![Streamlit](https://img.shields.io/badge/Control%20Plane-Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Continuous Integration](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/ci-cd.yml)
+[![Code Quality Assurance](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/ci.yml/badge.svg)](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/ci.yml)
+[![Security Analysis](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/security.yml/badge.svg)](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/security.yml)
+[![SAST Code Flaw Scan](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/sast.yml/badge.svg)](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/sast.yml)
+[![Performance Benchmarks](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/benchmarks.yml/badge.svg)](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/benchmarks.yml)
+[![Schema Validation](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/data-validation.yml/badge.svg)](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/data-validation.yml)
+[![Automated Release](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/release.yml/badge.svg)](https://github.com/Trojan3877/Facial-Emotion-Recognition-System/actions/workflows/release.yml)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
+[![Library: OpenCV](https://img.shields.io/badge/Library-OpenCV-blueviolet.svg?logo=opencv)](https://opencv.org/)
+[![Code Style: Flake8](https://img.shields.io/badge/code%20style-flake8-black)](https://flake8.pycqa.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
+
 An enterprise-grade, high-throughput computer vision edge-inference pipeline and observability control plane. This platform moves past basic synchronous frame execution script architectures by implementing a **decoupled asynchronous frame streaming ingestion consumer** side-by-side with localized model-inference loops, an **MLflow-audited model training registry**, and an interactive telemetry dashboard.
 
 ---
